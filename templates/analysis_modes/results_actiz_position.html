@@ -1,0 +1,90 @@
+<!-- ActiZ Position Analysis Results -->
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12l2 2 4-4"></path>
+            <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+        </svg>
+        <h3>ActiZ Positie Analyse</h3>
+    </div>
+
+    {% set position_data = results.analysis_result.position_analysis %}
+    
+    <div class="stats-grid mb-4">
+        <div class="stat-card">
+            <div class="value">{{ position_data.ondersteuning_score or 0 }}/10</div>
+            <div class="label">Ondersteuning Score</div>
+        </div>
+    </div>
+
+    {% if position_data.steunpunten %}
+    <div class="insight-section">
+        <h4><span class="icon">✅</span> Steunpunten</h4>
+        <ul class="insight-list">
+            {% for item in position_data.steunpunten %}
+            <li>{{ item|safe }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if position_data.kritiekpunten %}
+    <div class="insight-section">
+        <h4><span class="icon">⚠️</span> Kritiekpunten</h4>
+        <ul class="insight-list">
+            {% for item in position_data.kritiekpunten %}
+            <li>{{ item|safe }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if position_data.verbeteringen %}
+    <div class="insight-section">
+        <h4><span class="icon">💡</span> Voorgestelde Verbeteringen</h4>
+        <ul class="insight-list">
+            {% for item in position_data.verbeteringen %}
+            <li>{{ item|safe }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if position_data.impact_zorgsector %}
+    <div class="insight-section">
+        <h4><span class="icon">🏥</span> Impact op de Zorgsector</h4>
+        <p>{{ position_data.impact_zorgsector|safe }}</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Document Summaries -->
+{% if results.analysis_result.policy_summary or results.analysis_result.actiz_summary %}
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <h3>Document Samenvattingen</h3>
+    </div>
+
+    {% if results.analysis_result.policy_summary %}
+    <div class="insight-section">
+        <h4>📋 Beleidsdocument Samenvatting</h4>
+        <p>{{ results.analysis_result.policy_summary|safe }}</p>
+    </div>
+    {% endif %}
+
+    {% if results.analysis_result.actiz_summary %}
+    <div class="insight-section">
+        <h4>📄 ActiZ Standpunt Samenvatting</h4>
+        <p>{{ results.analysis_result.actiz_summary|safe }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ - Vergelijkingsresultaten</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --actiz-yellow: #F9b000;
+            --actiz-yellow-light: #Fed992;
+            --actiz-purple: #3d0a85;
+            --actiz-purple-light: #9886b8;
+            --actiz-blue: #00a1b4;
+            --actiz-blue-light: #9ed0da;
+            --actiz-green: #14ab78;
+            --actiz-red: #a91352;
+            --actiz-grey: #545352;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: var(--actiz-purple);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .differences-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .differences-table thead {
+            background-color: #f8f9fa;
+        }
+
+        .differences-table th {
+            font-weight: 600;
+            color: var(--actiz-grey);
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem;
+        }
+
+        .differences-table td {
+            padding: 1rem;
+            vertical-align: top;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .type-koptitel {
+            background-color: var(--actiz-purple);
+            color: white;
+        }
+
+        .type-verwijderd {
+            background-color: var(--actiz-red);
+            color: white;
+        }
+
+        .type-toegevoegd {
+            background-color: var(--actiz-green);
+            color: white;
+        }
+
+        .type-gewijzigd, .type-vervangen {
+            background-color: var(--actiz-blue);
+            color: white;
+        }
+
+        .diff-removed {
+            text-decoration: line-through;
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 0.1rem 0.2rem;
+            border-radius: 2px;
+        }
+
+        .diff-added {
+            text-decoration: underline;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 0.1rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .diff-moved {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 0.1rem 0.2rem;
+            border-radius: 2px;
+            font-style: italic;
+        }
+
+        .diff-fragment {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid #ffeeba;
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .diff-warning {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            display: block;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .type-verplaatst {
+            background-color: #1976d2;
+            color: white;
+        }
+
+        .type-fragment {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .type-waarschuwing {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .inline-diff-view {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--actiz-blue);
+        }
+
+        .section-context {
+            font-size: 0.875rem;
+            color: var(--actiz-purple);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .diff-content {
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .ai-insights {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .ai-insights h3 {
+            color: var(--actiz-purple);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .insight-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .insight-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .insight-section h4 {
+            color: var(--actiz-grey);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            border-left: 4px solid var(--actiz-blue);
+        }
+
+        .insight-section h4 .icon {
+            margin-right: 0.75rem;
+            font-size: 1.3rem;
+            color: var(--actiz-blue);
+        }
+
+        .insight-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .insight-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .insight-list li:before {
+            content: "•";
+            color: var(--actiz-blue);
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+        }
+
+        .highlight {
+            background-color: var(--actiz-yellow-light);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--actiz-purple);
+        }
+
+        .stat-card .label {
+            color: var(--actiz-grey);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--actiz-grey);
+        }
+
+        .impact-summary {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .impact-summary h5 {
+            color: #856404;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .impact-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .impact-card:hover {
+            border-color: var(--actiz-blue);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .impact-card .impact-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-card h6 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--actiz-grey);
+            margin-bottom: 0.25rem;
+        }
+
+        .impact-card p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: #6c757d;
+        }
+
+        .context-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .context-tag {
+            background-color: var(--actiz-purple-light);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .btn-actiz {
+            background-color: var(--actiz-purple);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-actiz:hover {
+            background-color: #2e0866;
+            color: white;
+        }
+
+        .section-header {
+            background-color: #f8f9fa;
+            padding: 1rem 1.5rem;
+            margin: -2rem -2rem 1.5rem -2rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header svg {
+            margin-right: 0.5rem;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .stat-card {
+                break-inside: avoid;
+            }
+            
+            .differences-table {
+                page-break-inside: auto;
+            }
+            
+            tr {
+                page-break-inside: avoid;
+            }
+        }
+
+        .file-info {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .file-info strong {
+            color: var(--actiz-purple);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark no-print">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                ActiZ Document Vergelijker - Resultaten
+            </span>
+            <span class="text-white-50 small">
+                Vergelijking ID: {{ results.comparison_id[:8] }}...
+            </span>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <!-- Lorem Ipsum Warning -->
+        {% if results.lorem_ipsum_detected %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                <line x1="12" x2="12" y1="9" y2="13"></line>
+                <line x1="12" x2="12.01" y1="17" y2="17"></line>
+            </svg>
+            <strong>Let op:</strong> {{ results.lorem_warning }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        
+        <!-- File Info -->
+        {% if results.filenames %}
+        <div class="file-info">
+            <strong>Document 1:</strong> {{ results.filenames.doc1 }} &nbsp;&nbsp;|&nbsp;&nbsp;
+            <strong>Document 2:</strong> {{ results.filenames.doc2 }}
+        </div>
+        {% endif %}
+
+        <!-- Statistics Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="value">{{ results.stats.differences_count }}</div>
+                <div class="label">Verschillen gevonden</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ results.stats.doc1_chars_k }}</div>
+                <div class="label">Karakters document 1</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ results.stats.doc2_chars_k }}</div>
+                <div class="label">Karakters document 2</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ results.stats.change_intensity }}</div>
+                <div class="label">Wijzigingsintensiteit</div>
+            </div>
+        </div>
+
+        <!-- Detailed Differences Table -->
+        <div class="differences-table">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                </svg>
+                <h3 class="mb-0">Gedetailleerde Verschillen</h3>
+            </div>
+            
+            {% if results.differences_count > 0 %}
+            
+            <!-- Beide views tegelijk tonen -->
+            <div class="mb-4">
+                <h4 class="text-muted mb-3">Inline weergave</h4>
+                <!-- Inline Diff View -->
+                <div id="inline-view" class="diff-view mb-4">
+                    {% for diff in results.structured_differences %}
+                    <div class="inline-diff-view">
+                        <div class="section-context">
+                            📍 {{ diff.section_context }}
+                        </div>
+                        <div class="diff-content">
+                            {{ diff.inline_diff|safe }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <hr class="my-4">
+                
+                <h4 class="text-muted mb-3">Tabel weergave</h4>
+                <!-- Table View -->
+                <div id="table-view" class="diff-view">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Type</th>
+                                    <th style="width: 120px;">Sectie</th>
+                                    <th style="width: 40%;">Origineel</th>
+                                    <th style="width: 40%;">Gewijzigd</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for diff in results.structured_differences %}
+                                <tr>
+                                    <td>
+                                        <span class="type-badge type-{{ diff.type }}">
+                                            {{ diff.type_label }}
+                                        </span>
+                                    </td>
+                                    <td class="text-muted small">
+                                        {% if diff.section_ref %}
+                                            {{ diff.section_ref }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if diff.original %}
+                                            <div class="small">
+                                                {{ diff.original }}
+                                            </div>
+                                        {% else %}
+                                            <em class="text-muted">n.v.t.</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if diff.modified %}
+                                            <div class="small">
+                                                {{ diff.modified }}
+                                            </div>
+                                        {% elif diff.type == 'verwijderd' %}
+                                            <em class="text-muted">Verwijderd</em>
+                                        {% else %}
+                                            <em class="text-muted">n.v.t.</em>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="m8 12 2 2 4-4"></path>
+                </svg>
+                <h4>Geen significante verschillen gevonden</h4>
+                <p class="mb-0">De documenten zijn inhoudelijk identiek.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- AI Analysis & Insights -->
+        <div class="ai-insights">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+                <h3 class="mb-0">AI Analyse & Inzichten</h3>
+            </div>
+
+            {% if results.ai_analysis.summary %}
+            <div class="insight-section">
+                <h4><span class="icon">📋</span> 1. Samenvatting van wijzigingen</h4>
+                <ul class="insight-list">
+                    {% for item in results.ai_analysis.summary %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if results.ai_analysis.added %}
+            <div class="insight-section">
+                <h4><span class="icon">➕</span> 2. Toegevoegde onderwerpen</h4>
+                <ul class="insight-list">
+                    {% for item in results.ai_analysis.added %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if results.ai_analysis.removed %}
+            <div class="insight-section">
+                <h4><span class="icon">➖</span> 3. Verwijderde of aangepaste onderdelen</h4>
+                <ul class="insight-list">
+                    {% for item in results.ai_analysis.removed %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if results.ai_analysis.impact %}
+            <div class="insight-section">
+                <h4><span class="icon">⚡</span> 4. Beleidsmatige Impact</h4>
+                
+                <!-- Korte samenvatting bovenaan -->
+                <div class="impact-summary">
+                    <h5>🎯 Kernpunten voor beleid</h5>
+                    <ul class="mb-0" style="padding-left: 1.5rem;">
+                        {% for item in results.ai_analysis.impact[:3] %}
+                        <li style="margin-bottom: 0.25rem;">{{ item|safe }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Alleen tonen als er meer dan 3 impact items zijn -->
+                {% if results.ai_analysis.impact|length > 3 %}
+                <div class="mt-3">
+                    <h6 class="text-muted">Aanvullende overwegingen:</h6>
+                    <ul class="insight-list">
+                        {% for item in results.ai_analysis.impact[3:] %}
+                        <li>{{ item|safe }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Context tags -->
+                <div class="context-tags">
+                    <span class="context-tag">🏥 Zorgaanbieders</span>
+                    <span class="context-tag">🏛️ Gemeenten</span>
+                    <span class="context-tag">💡 Innovatie</span>
+                    <span class="context-tag">📊 Kwaliteit</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Raw AI Analysis (hidden by default) -->
+            {% if results.ai_analysis.raw %}
+            <details class="mt-4">
+                <summary class="text-muted small" style="cursor: pointer;">Toon volledige AI analyse</summary>
+                <div class="mt-2 p-3 bg-light rounded">
+                    <pre class="mb-0" style="white-space: pre-wrap; font-size: 0.875rem;">{{ results.ai_analysis.raw }}</pre>
+                </div>
+            </details>
+            {% endif %}
+        </div>
+
+        
+        <!-- Paragraafvervangingen -->
+        {% if results.paragraph_replacements %}
+        <div class="ai-insights mt-5">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M12 4h9"></path>
+                    <rect x="3" y="9" width="13" height="6" rx="2" ry="2"></rect>
+                </svg>
+                <h3 class="mb-0">Paragraafvervangingen</h3>
+            </div>
+
+            {% for rep in results.paragraph_replacements %}
+            <div class="inline-diff-view">
+                <div class="section-context">
+                    🔁 Paragraaf met {{ rep.changes.similarity * 100 }}% overeenkomst
+                </div>
+                <div class="diff-content">
+                    <strong>Oude versie:</strong>
+                    <p>{{ rep.diff_html.old_html | safe }}</p>
+                    <strong>Nieuwe versie:</strong>
+                    <p>{{ rep.diff_html.new_html | safe }}</p>
+                    {% if rep.changes.key_changes %}
+                    <div class="diff-warning mt-2">
+                        🔍 AI-opmerking: {{ rep.changes.key_changes | join(", ") }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+        <!-- Action Buttons -->
+        <div class="mt-4 d-flex gap-2 no-print">
+            <button class="btn btn-actiz" onclick="window.print()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Print Rapport
+            </button>
+            <a href="{{ url_for('download_report', comparison_id=results.comparison_id) }}" class="btn btn-outline-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Nieuwe Vergelijking
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle tussen inline en tabel weergave
+        function toggleDiffView() {
+            const inlineView = document.getElementById('inline-view');
+            const tableView = document.getElementById('table-view');
+            
+            if (inlineView.style.display === 'none') {
+                inlineView.style.display = 'block';
+                tableView.style.display = 'none';
+            } else {
+                inlineView.style.display = 'none';
+                tableView.style.display = 'block';
+            }
+        }
+        
+        // Highlight functie voor belangrijke termen
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-highlight belangrijke termen in de AI analyse
+            const terms = ['digitale ondersteuning', 'valpreventie', 'leefstijlinterventies', 'monitoring op afstand'];
+            const insightLists = document.querySelectorAll('.insight-list li');
+            
+            insightLists.forEach(li => {
+                let html = li.innerHTML;
+                terms.forEach(term => {
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    html = html.replace(regex, '<span class="highlight">$1</span>');
+                });
+                li.innerHTML = html;
+            });
+        });
+    </script>
+</body>
+</html>

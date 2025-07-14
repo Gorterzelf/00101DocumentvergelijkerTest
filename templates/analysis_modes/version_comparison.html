@@ -1,0 +1,174 @@
+<!-- Version Comparison Results -->
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">{{ results.analysis_result.basic_comparison.total_changes|default(0) }}</div>
+        <div class="label">Verschillen gevonden</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ results.analysis_result.basic_comparison.similarity_percentage|default(100.0) }}%</div>
+        <div class="label">Overeenkomst</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ (results.analysis_result.doc1_length/1000)|round(1) }}k</div>
+        <div class="label">Document 1 grootte</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ (results.analysis_result.doc2_length/1000)|round(1) }}k</div>
+        <div class="label">Document 2 grootte</div>
+    </div>
+</div>
+
+<!-- Show message if no differences found -->
+{% if results.analysis_result.basic_comparison.total_changes == 0 %}
+<div class="analysis-section">
+    <div class="alert alert-info">
+        <h4 class="alert-heading">Geen verschillen gevonden</h4>
+        <p>De twee documenten zijn identiek of bevatten te weinig tekst om te vergelijken.</p>
+        <hr>
+        <p class="mb-0">Controleer of de bestanden leesbare tekst bevatten.</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Detailed Differences Section -->
+{% if results.analysis_result.basic_comparison.differences and results.analysis_result.basic_comparison.differences|length > 0 %}
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+        </svg>
+        <h3>Gedetailleerde Verschillen</h3>
+    </div>
+    
+    <div class="mb-4">
+        <h4 class="text-muted mb-3">Inline weergave</h4>
+        <div class="diff-view mb-4">
+            {% for diff in results.analysis_result.basic_comparison.differences %}
+            <div class="inline-diff-view">
+                <div class="section-context">
+                    📍 {{ diff.section_context }}
+                </div>
+                <div class="diff-content">
+                    {{ diff.inline_diff|safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <hr class="my-4">
+        
+        <h4 class="text-muted mb-3">Tabel weergave</h4>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 100px;">Type</th>
+                        <th style="width: 120px;">Sectie</th>
+                        <th style="width: 40%;">Origineel</th>
+                        <th style="width: 40%;">Gewijzigd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for diff in results.analysis_result.basic_comparison.differences %}
+                    <tr>
+                        <td>
+                            <span class="type-badge type-{{ diff.type }}">
+                                {{ diff.type }}
+                            </span>
+                        </td>
+                        <td class="text-muted small">
+                            {{ diff.section_context or 'Begin document' }}
+                        </td>
+                        <td>
+                            {% if diff.original %}
+                                <div class="small">{{ diff.original }}</div>
+                            {% else %}
+                                <em class="text-muted">—</em>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if diff.modified %}
+                                <div class="small">{{ diff.modified }}</div>
+                            {% else %}
+                                <em class="text-muted">—</em>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Moved Blocks Section -->
+{% if results.analysis_result.basic_comparison.moved_blocks and results.analysis_result.basic_comparison.moved_blocks|length > 0 %}
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 7h10v10M17 7L7 17"></path>
+        </svg>
+        <h3>Verplaatste Tekstblokken</h3>
+    </div>
+    
+    <div class="moved-blocks">
+        {% for block in results.analysis_result.basic_comparison.moved_blocks %}
+        <div class="moved-block-item">
+            <div class="moved-indicator">
+                <span class="badge bg-primary">Verplaatst</span>
+                <span class="position-info">Van positie {{ block.from_position }} → {{ block.to_position }}</span>
+            </div>
+            <div class="moved-text">
+                {{ block.text|safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- AI Analysis & Insights -->
+{% if results.analysis_result.ai_analysis and results.analysis_result.ai_analysis.ai_analysis %}
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+        </svg>
+        <h3>AI Analyse & Inzichten</h3>
+    </div>
+
+    <div class="insight-section">
+        <p>{{ results.analysis_result.ai_analysis.ai_analysis|safe|linebreaks }}</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Document Summaries -->
+{% if results.analysis_result.doc1_summary or results.analysis_result.doc2_summary %}
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        <h3>Document Samenvattingen</h3>
+    </div>
+
+    {% if results.analysis_result.doc1_summary %}
+    <div class="insight-section">
+        <h4>📄 Document 1</h4>
+        <p>{{ results.analysis_result.doc1_summary|safe }}</p>
+    </div>
+    {% endif %}
+
+    {% if results.analysis_result.doc2_summary %}
+    <div class="insight-section">
+        <h4>📄 Document 2</h4>
+        <p>{{ results.analysis_result.doc2_summary|safe }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endif %}

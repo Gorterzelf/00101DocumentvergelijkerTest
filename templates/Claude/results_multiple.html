@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ - {{ results.mode_display_name }} Resultaten</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --actiz-yellow: #F9b000;
+            --actiz-yellow-light: #Fed992;
+            --actiz-purple: #3d0a85;
+            --actiz-purple-light: #9886b8;
+            --actiz-blue: #00a1b4;
+            --actiz-blue-light: #9ed0da;
+            --actiz-green: #14ab78;
+            --actiz-red: #a91352;
+            --actiz-grey: #545352;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: var(--actiz-purple);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .analysis-header {
+            background: linear-gradient(135deg, var(--actiz-purple) 0%, var(--actiz-blue) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-header h1 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .analysis-header .badge {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--actiz-purple);
+        }
+
+        .stat-card .label {
+            color: var(--actiz-grey);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .analysis-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .analysis-section h3 {
+            color: var(--actiz-purple);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .analysis-section h3 .icon {
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+        }
+
+        .insight-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .insight-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .insight-section h4 {
+            color: var(--actiz-grey);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            border-left: 4px solid var(--actiz-blue);
+        }
+
+        .insight-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .insight-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .insight-list li:before {
+            content: "•";
+            color: var(--actiz-blue);
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header svg {
+            margin-right: 0.75rem;
+            color: var(--actiz-purple);
+        }
+
+        .section-header h3 {
+            margin: 0;
+            color: var(--actiz-purple);
+            font-weight: 600;
+        }
+
+        .inline-diff-view {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-context {
+            font-weight: 600;
+            color: var(--actiz-purple);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .diff-content {
+            line-height: 1.6;
+        }
+
+        .diff-added {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .diff-removed {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 2px 4px;
+            border-radius: 3px;
+            text-decoration: line-through;
+        }
+
+        .type-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-vervangen {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .type-toegevoegd {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .type-verwijderd {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .impact-summary {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .context-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .context-tag {
+            background: var(--actiz-blue);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .btn-actiz {
+            background-color: var(--actiz-purple);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-actiz:hover {
+            background-color: #2e0866;
+            color: white;
+            text-decoration: none;
+        }
+
+        .document-info {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+		
+    	.moved-block-item {
+            background: #e6f5f6;
+            border-left: 4px solid var(--actiz-blue);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .moved-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .position-info {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .moved-text {
+            font-style: italic;
+            color: var(--actiz-grey);
+        }
+
+        .type-gewijzigd {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .document-info strong {
+            color: var(--actiz-purple);
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+			
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark no-print">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                ActiZ Document Analyse - Resultaten
+            </span>
+            <span class="text-white-50 small">
+                ID: {{ results.comparison_id[:8] }}...
+            </span>
+        </div>
+    </nav>
+
+    <div class="analysis-header">
+        <div class="container">
+            <h1>{{ results.mode_display_name }}</h1>
+            <span class="badge">{{ results.stats.total_docs }} documenten geanalyseerd</span>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <!-- Document Info -->
+        <div class="document-info">
+            {% for key, filename in results.filenames.items() %}
+                <strong>{{ key.upper() }}:</strong> {{ filename }}
+                {% if not loop.last %} &nbsp;&nbsp;|&nbsp;&nbsp; {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Statistics Cards for Version Comparison -->
+        {% if results.mode == 'version_comparison' and results.analysis_result.basic_comparison %}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">{{ results.analysis_result.basic_comparison.differences|length }}</div>
+                <div class="label">Verschillen gevonden</div>
+            </div>
+            {% set doc1_chars = (results.stats.total_chars_k|replace('k', '')|float / 2)|round(1) %}
+            {% set doc2_chars = (results.stats.total_chars_k|replace('k', '')|float / 2)|round(1) %}
+            <div class="stat-card">
+                <div class="value">{{ doc1_chars }}k</div>
+                <div class="label">Karakters document 1</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ doc2_chars }}k</div>
+                <div class="label">Karakters document 2</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">100.0%</div>
+                <div class="label">Wijzigingsintensiteit</div>
+            </div>
+        </div>
+        {% endif %}
+		
+<!-- Version Comparison Results -->
+        {% if results.mode == 'version_comparison' %}
+        
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">{{ results.analysis_result.basic_comparison.total_changes|default(0) }}</div>
+                <div class="label">Verschillen gevonden</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ results.analysis_result.basic_comparison.similarity_percentage|default(100.0) }}%</div>
+                <div class="label">Overeenkomst</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ (results.analysis_result.doc1_length/1000)|round(1) }}k</div>
+                <div class="label">Document 1 grootte</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ (results.analysis_result.doc2_length/1000)|round(1) }}k</div>
+                <div class="label">Document 2 grootte</div>
+            </div>
+        </div>
+
+        <!-- Show message if no differences found -->
+        {% if results.analysis_result.basic_comparison.total_changes == 0 %}
+        <div class="analysis-section">
+            <div class="alert alert-info">
+                <h4 class="alert-heading">Geen verschillen gevonden</h4>
+                <p>De twee documenten zijn identiek of bevatten te weinig tekst om te vergelijken.</p>
+                <hr>
+                <p class="mb-0">Controleer of de bestanden leesbare tekst bevatten.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Detailed Differences Section -->
+        {% if results.analysis_result.basic_comparison.differences and results.analysis_result.basic_comparison.differences|length > 0 %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                </svg>
+                <h3>Gedetailleerde Verschillen</h3>
+            </div>
+            
+            <div class="mb-4">
+                <h4 class="text-muted mb-3">Inline weergave</h4>
+                <div class="diff-view mb-4">
+                    {% for diff in results.analysis_result.basic_comparison.differences %}
+                    <div class="inline-diff-view">
+                        <div class="section-context">
+                            📍 {{ diff.section_context }}
+                        </div>
+                        <div class="diff-content">
+                            {{ diff.inline_diff|safe }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <hr class="my-4">
+                
+                <h4 class="text-muted mb-3">Tabel weergave</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Type</th>
+                                <th style="width: 120px;">Sectie</th>
+                                <th style="width: 40%;">Origineel</th>
+                                <th style="width: 40%;">Gewijzigd</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for diff in results.analysis_result.basic_comparison.differences %}
+                            <tr>
+                                <td>
+                                    <span class="type-badge type-{{ diff.type }}">
+                                        {{ diff.type }}
+                                    </span>
+                                </td>
+                                <td class="text-muted small">
+                                    {{ diff.section_context or 'Begin document' }}
+                                </td>
+                                <td>
+                                    {% if diff.original %}
+                                        <div class="small">{{ diff.original }}</div>
+                                    {% else %}
+                                        <em class="text-muted">—</em>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if diff.modified %}
+                                        <div class="small">{{ diff.modified }}</div>
+                                    {% else %}
+                                        <em class="text-muted">—</em>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Moved Blocks Section -->
+        {% if results.analysis_result.basic_comparison.moved_blocks and results.analysis_result.basic_comparison.moved_blocks|length > 0 %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 7h10v10M17 7L7 17"></path>
+                </svg>
+                <h3>Verplaatste Tekstblokken</h3>
+            </div>
+            
+            <div class="moved-blocks">
+                {% for block in results.analysis_result.basic_comparison.moved_blocks %}
+                <div class="moved-block-item">
+                    <div class="moved-indicator">
+                        <span class="badge bg-primary">Verplaatst</span>
+                        <span class="position-info">Van positie {{ block.from_position }} → {{ block.to_position }}</span>
+                    </div>
+                    <div class="moved-text">
+                        {{ block.text|safe }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- AI Analysis & Insights -->
+        {% if results.analysis_result.ai_analysis and results.analysis_result.ai_analysis.ai_analysis %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+                <h3>AI Analyse & Inzichten</h3>
+            </div>
+
+            <div class="insight-section">
+                <p>{{ results.analysis_result.ai_analysis.ai_analysis|safe|linebreaks }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Document Summaries -->
+        {% if results.analysis_result.doc1_summary or results.analysis_result.doc2_summary %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <h3>Document Samenvattingen</h3>
+            </div>
+
+            {% if results.analysis_result.doc1_summary %}
+            <div class="insight-section">
+                <h4>📄 Document 1</h4>
+                <p>{{ results.analysis_result.doc1_summary|safe }}</p>
+            </div>
+            {% endif %}
+
+            {% if results.analysis_result.doc2_summary %}
+            <div class="insight-section">
+                <h4>📄 Document 2</h4>
+                <p>{{ results.analysis_result.doc2_summary|safe }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- ActiZ Position Analysis Results -->
+        {% if results.mode == 'actiz_position' and results.analysis_result.position_analysis %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 12l2 2 4-4"></path>
+                    <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+                    <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+                </svg>
+                <h3>ActiZ Positie Analyse</h3>
+            </div>
+
+            {% set position_data = results.analysis_result.position_analysis %}
+            
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <div class="value">{{ position_data.ondersteuning_score or 0 }}/10</div>
+                    <div class="label">Ondersteuning Score</div>
+                </div>
+            </div>
+
+            {% if position_data.steunpunten %}
+            <div class="insight-section">
+                <h4><span class="icon">✅</span> Steunpunten</h4>
+                <ul class="insight-list">
+                    {% for item in position_data.steunpunten %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if position_data.kritiekpunten %}
+            <div class="insight-section">
+                <h4><span class="icon">⚠️</span> Kritiekpunten</h4>
+                <ul class="insight-list">
+                    {% for item in position_data.kritiekpunten %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if position_data.verbeteringen %}
+            <div class="insight-section">
+                <h4><span class="icon">💡</span> Voorgestelde Verbeteringen</h4>
+                <ul class="insight-list">
+                    {% for item in position_data.verbeteringen %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if position_data.impact_zorgsector %}
+            <div class="insight-section">
+                <h4><span class="icon">🏥</span> Impact op de Zorgsector</h4>
+                <p>{{ position_data.impact_zorgsector|safe }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Document Summaries -->
+        {% if results.analysis_result.policy_summary or results.analysis_result.actiz_summary %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <h3>Document Samenvattingen</h3>
+            </div>
+
+            {% if results.analysis_result.policy_summary %}
+            <div class="insight-section">
+                <h4>📋 Beleidsdocument Samenvatting</h4>
+                <p>{{ results.analysis_result.policy_summary|safe }}</p>
+            </div>
+            {% endif %}
+
+            {% if results.analysis_result.actiz_summary %}
+            <div class="insight-section">
+                <h4>📄 ActiZ Standpunt Samenvatting</h4>
+                <p>{{ results.analysis_result.actiz_summary|safe }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <!-- External Reaction Analysis Results -->
+        {% if results.mode == 'external_reaction' and results.analysis_result.ai_analysis %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                <h3>Externe Reactie Analyse</h3>
+            </div>
+
+            {% set ai_analysis = results.analysis_result.ai_analysis %}
+            
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <div class="value">{{ ai_analysis.sentiment|title or 'Neutraal' }}</div>
+                    <div class="label">Overall Sentiment</div>
+                </div>
+            </div>
+
+            {% if ai_analysis.key_concerns %}
+            <div class="insight-section">
+                <h4><span class="icon">⚠️</span> Hoofdpunten van Kritiek</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.key_concerns %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.support_points %}
+            <div class="insight-section">
+                <h4><span class="icon">👍</span> Punten van Steun</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.support_points %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.suggestions %}
+            <div class="insight-section">
+                <h4><span class="icon">💡</span> Voorstellen voor Verbetering</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.suggestions %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.stakeholder_impact %}
+            <div class="insight-section">
+                <h4><span class="icon">👥</span> Impact op Belanghebbenden</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.stakeholder_impact %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.response_strategy %}
+            <div class="insight-section">
+                <h4><span class="icon">🎯</span> Reactiestrategie voor ActiZ</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.response_strategy %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Strategic Communication Analysis Results -->
+        {% if results.mode == 'strategic_communication' and results.analysis_result.ai_analysis %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <h3>Strategische Communicatie Analyse</h3>
+            </div>
+
+            {% set ai_analysis = results.analysis_result.ai_analysis %}
+
+            {% if ai_analysis.themes %}
+            <div class="insight-section">
+                <h4><span class="icon">🎯</span> Gemeenschappelijke Thema's</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.themes %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.inconsistencies %}
+            <div class="insight-section">
+                <h4><span class="icon">⚠️</span> Inconsistenties tussen Documenten</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.inconsistencies %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.key_messages %}
+            <div class="insight-section">
+                <h4><span class="icon">📢</span> Belangrijkste Boodschappen</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.key_messages %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.stakeholder_mapping %}
+            <div class="insight-section">
+                <h4><span class="icon">👥</span> Stakeholder Mapping</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.stakeholder_mapping %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.communication_gaps %}
+            <div class="insight-section">
+                <h4><span class="icon">🔍</span> Communicatie Leemtes</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.communication_gaps %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if ai_analysis.strategic_recommendations %}
+            <div class="insight-section">
+                <h4><span class="icon">🚀</span> Strategische Aanbevelingen</h4>
+                <ul class="insight-list">
+                    {% for item in ai_analysis.strategic_recommendations %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Actions Section -->
+        <div class="analysis-section no-print">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v6l4-4-4-4z"></path>
+                    <path d="M12 8v6l4-4-4-4z"></path>
+                    <path d="M12 14v6l4-4-4-4z"></path>
+                </svg>
+                <h3>Acties</h3>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ url_for('download_report', comparison_id=results.comparison_id) }}" class="btn btn-actiz w-100 mb-3">
+                        📄 Download PDF Rapport
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <button onclick="window.print()" class="btn btn-outline-secondary w-100 mb-3">
+                        🖨️ Print Resultaten
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-primary w-100 mb-3">
+                        🔄 Nieuwe Analyse
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Info (Development Mode) -->
+        {% if config.get('DEBUG') %}
+        <div class="analysis-section">
+            <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                    <circle cx="12" cy="13" r="3"></circle>
+                </svg>
+                <h3>Technische Informatie (Debug Mode)</h3>
+            </div>
+
+            <div class="small text-muted">
+                <p><strong>Comparison ID:</strong> {{ results.comparison_id }}</p>
+                <p><strong>Mode:</strong> {{ results.mode }}</p>
+                <p><strong>Uploaded Files:</strong></p>
+                <ul>
+                    {% for key, filename in results.filenames.items() %}
+                    <li>{{ key }}: {{ filename }}</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Analysis Stats:</strong></p>
+                <pre>{{ results.stats|tojson(indent=2) }}</pre>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="bg-light py-4 mt-5 no-print">
+        <div class="container text-center">
+            <p class="text-muted mb-0">
+                ActiZ Document Analyse Tool • 
+                <a href="{{ url_for('documentation') }}" class="text-decoration-none">Documentatie</a> • 
+                Versie 2.0 Unified
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => {
+                if (alert.classList.contains('show')) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        });
+
+        // Enhanced print functionality
+        window.addEventListener('beforeprint', function() {
+            document.title = `ActiZ ${document.querySelector('h1').textContent} - ${new Date().toLocaleDateString('nl-NL')}`;
+        });
+
+        // Copy comparison ID to clipboard
+        function copyComparisonId() {
+            const id = '{{ results.comparison_id }}';
+            navigator.clipboard.writeText(id).then(() => {
+                alert('Comparison ID gekopieerd naar klembord!');
+            });
+        }
+
+        // Add click handler to comparison ID if visible
+        const comparisonIdElement = document.querySelector('.navbar .text-white-50');
+        if (comparisonIdElement) {
+            comparisonIdElement.style.cursor = 'pointer';
+            comparisonIdElement.title = 'Klik om te kopiëren';
+            comparisonIdElement.addEventListener('click', copyComparisonId);
+        }
+    </script>
+</body>
+</html>

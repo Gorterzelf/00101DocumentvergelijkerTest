@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ActiZ Document Analyse Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f8f9;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #7c5295;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .accordion {
+      background-color: #ffffff;
+      border: 2px solid #7c5295;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+
+    .accordion-header {
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #7c5295;
+    }
+
+    .accordion-content {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .accordion.active .accordion-content {
+      display: block;
+    }
+
+    input[type="file"] {
+      margin-bottom: 0.5rem;
+    }
+
+    button {
+      background-color: #f18700;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .tip-box {
+      background-color: #f3e8fc;
+      border-left: 4px solid #7c5295;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ActiZ Document Analyse Tool</h1>
+
+    <p><strong>Geavanceerde Document Analyse</strong><br />
+    Analyseer beleidsdocumenten met AI-gestuurde inzichten. Kies een analyse type en upload uw documenten.</p>
+
+    <div class="accordion" onclick="toggleAccordion(this)">
+      <div class="accordion-header">📄 Versie Vergelijking</div>
+      <div class="accordion-content">
+        <p><strong>Versie Vergelijking</strong><br>
+        Vergelijk twee versies van hetzelfde document om wijzigingen te identificeren en de impact te analyseren.</p>
+        <h2>Upload documenten voor vergelijking</h2>
+        <label>📎 Oorspronkelijk document (versie 1)</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <label>📎 Gewijzigd document (versie 2)</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <button>Start Versie Vergelijking</button>
+      </div>
+    </div>
+
+    <div class="accordion" onclick="toggleAccordion(this)">
+      <div class="accordion-header">🎯 ActiZ Positie Analyse</div>
+      <div class="accordion-content">
+        <p><strong>ActiZ Positie Analyse</strong><br>
+        Analyseer hoe ActiZ standpunten zich verhouden tot voorgesteld beleid en identificeer kansen en uitdagingen.</p>
+        <h2>Upload documenten voor positie analyse</h2>
+        <label>📎 Beleidsdocument</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <label>📎 ActiZ standpunt</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <button>Start Positie Analyse</button>
+      </div>
+    </div>
+
+    <div class="accordion" onclick="toggleAccordion(this)">
+      <div class="accordion-header">💬 Externe Reactie Analyse</div>
+      <div class="accordion-content">
+        <p><strong>Externe Reactie Analyse</strong><br>
+        Analyseer externe reacties op beleid om sentiment, zorgen en kansen te identificeren.</p>
+        <h2>Upload documenten voor reactie analyse</h2>
+        <label>📎 Beleidsdocument</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <label>📎 Externe reactie</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <button>Start Reactie Analyse</button>
+      </div>
+    </div>
+
+    <div class="accordion" onclick="toggleAccordion(this)">
+      <div class="accordion-header">🚀 Strategische Communicatie</div>
+      <div class="accordion-content">
+        <p><strong>Strategische Communicatie</strong><br>
+        Analyseer meerdere documenten voor coherente communicatiestrategie en messaging alignment.</p>
+        <h2>Upload documenten voor strategische analyse</h2>
+        <label>📎 Beleidsdocument</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <label>📎 Communicatieplan</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <label>📎 Stakeholder doc</label><br />
+        <input type="file" accept=".docx,.pdf,.txt" /><br />
+        <button>Start Strategische Analyse</button>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 Tips voor beste resultaten</strong><br />
+      • Upload alleen Word documenten (.docx formaat)<br />
+      • Zorg dat documenten duidelijk gestructureerd zijn met koppen en paragrafen<br />
+      • Maximale bestandsgrootte is 50MB per document<br />
+      • De AI analyse duurt meestal 10–30 seconden afhankelijk van documentgrootte
+    </div>
+  </div>
+
+  <script>
+    function toggleAccordion(el) {
+      el.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>

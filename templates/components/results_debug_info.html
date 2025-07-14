@@ -1,0 +1,23 @@
+<!-- Technical Info (Development Mode) -->
+<div class="analysis-section">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+            <circle cx="12" cy="13" r="3"></circle>
+        </svg>
+        <h3>Technische Informatie (Debug Mode)</h3>
+    </div>
+
+    <div class="small text-muted">
+        <p><strong>Comparison ID:</strong> {{ results.comparison_id }}</p>
+        <p><strong>Mode:</strong> {{ results.mode }}</p>
+        <p><strong>Uploaded Files:</strong></p>
+        <ul>
+            {% for key, filename in results.filenames.items() %}
+            <li>{{ key }}: {{ filename }}</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Analysis Stats:</strong></p>
+        <pre>{{ results.stats|tojson(indent=2) }}</pre>
+    </div>
+</div>

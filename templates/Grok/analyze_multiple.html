@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>ActiZ Document Analyse Tool</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding: 20px; }
+        .analysis-mode { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .mode-icon { font-size: 2em; }
+        .diff-container { white-space: pre-wrap; word-wrap: break-word; font-family: monospace; }
+        ins { background: #e6ffe6; text-decoration: none; }  /* Groen voor added */
+        del { background: #ffe6e6; text-decoration: line-through; }  /* Rood voor removed */
+    </style>
+</head>
+<body>
+
+<div class="container my-4">
+    <h1 class="text-center">ActiZ Document Analyse Tool</h1>
+    
+    <div class="card my-4">
+        <div class="card-body">
+            <h2 class="card-title">Geavanceerde Document Analyse</h2>
+            <p>Analyseer beleidsdocumenten met AI-gestuurde inzichten. Kies een analyse type en upload uw documenten.</p>
+        </div>
+    </div>
+
+    <div class="card my-4">
+        <div class="card-body text-center">
+            <div class="d-flex justify-content-around">
+                <span class="badge badge-primary">1 Kies analyse</span>
+                <span>→</span>
+                <span class="badge badge-primary">2 Upload documenten</span>
+                <span>→</span>
+                <span class="badge badge-primary">3 Bekijk resultaten</span>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col">
+            <div class="card h-100 analysis-mode">
+                <div class="card-body">
+                    <h5 class="card-title">Basis <span class="mode-icon">📊</span></h5>
+                    <h6>Versie Vergelijking</h6>
+                    <p class="card-text">Vergelijk twee versies van hetzelfde document om wijzigingen te identificeren en de impact te analyseren.</p>
+                </div>
+                <div class="card-footer">
+                    <form method="post" action="/upload-multiple" enctype="multipart/form-data">
+                        <input type="hidden" name="mode" value="version_comparison">
+                        <div class="upload-section">
+                            <h6>📤 Upload documenten voor vergelijking</h6>
+                            <div class="form-group">
+                                <label for="doc1">📄 Origineel document (versie 1)</label>
+                                <input type="file" class="form-control-file" id="doc1" name="doc1" accept=".docx,.pdf,.txt">
+                                <small class="form-text text-muted">Word, PDF of tekst bestand</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="doc2">📝 Gewijzigd document (versie 2)</label>
+                                <input type="file" class="form-control-file" id="doc2" name="doc2" accept=".docx,.pdf,.txt">
+                                <small class="form-text text-muted">Word, PDF of tekst bestand</small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">🚀 Start Versie Vergelijking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 analysis-mode">
+                <div class="card-body">
+                    <h5 class="card-title">Standpunt <span class="mode-icon">🎯</span></h5>
+                    <h6>ActiZ Positie Analyse</h6>
+                    <p class="card-text">Analyseer hoe ActiZ standpunten zich verhouden tot voorgesteld beleid en identificeer kansen en uitdagingen.</p>
+                </div>
+                <div class="card-footer">
+                    <form method="post" action="/upload-multiple" enctype="multipart/form-data">
+                        <input type="hidden" name="mode" value="actiz_position">
+                        <div class="upload-section">
+                            <h6>📤 Upload documenten voor positie analyse</h6>
+                            <div class="form-group">
+                                <label for="doc1">🏛️ Beleidsdocument</label>
+                                <input type="file" class="form-control-file" id="doc1" name="doc1" accept=".docx,.pdf,.txt">
+                                <small class="form-text text-muted">Word, PDF of tekst bestand</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="doc2">🏥 ActiZ standpunt</label>
+                                <input type="file" class="form-control-file" id="doc2" name="doc2" accept=".docx,.pdf,.txt">
+                                <small class="form-text text-muted">Word, PDF of tekst bestand</small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">🚀 Start Positie Analyse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 analysis-mode">
+                <div class="card-body">
+                    <h5 class="card-title">Reactie <span class="mode-icon">💬</span></h5>
+                    <h6>Externe Reactie Analyse</h6>
+                    <p class="card-text">Analyseer externe reacties op beleid om sentiment, zorgen en kansen te identificeren.</p>
+                </div>
+                <div class="card-footer">
+                    <form method="post" action="/upload-multiple" enctype="multipart/form-data">
+                        <input type="hidden" name="mode" value="external_reaction">
+                        <div class="upload-section">
+                            <h6>📤 Upload documenten voor reactie analyse</h6>
+                            <div class="form-group">
+                                <label for="doc1">📋 Beleidsdocument</label>
+                                <input type="file" class="form-control-file" id="doc1" name="doc1" accept=".docx">
+                                <small class="form-text text-muted">Word document (.docx)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="doc2">💭 Externe reactie</label>
+                                <input type="file" class="form-control-file" id="doc2" name="doc2" accept=".docx">
+                                <small class="form-text text-muted">Word document (.docx)</small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">🚀 Start Reactie Analyse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 analysis-mode">
+                <div class="card-body">
+                    <h5 class="card-title">Strategie <span class="mode-icon">🚀</span></h5>
+                    <h6>Strategische Communicatie</h6>
+                    <p class="card-text">Analyseer meerdere documenten voor coherente communicatiestrategie en messaging alignment.</p>
+                </div>
+                <div class="card-footer">
+                    <form method="post" action="/upload-multiple" enctype="multipart/form-data">
+                        <input type="hidden" name="mode" value="strategic_communication">
+                        <div class="upload-section">
+                            <h6>📤 Upload documenten voor strategische analyse</h6>
+                            <div class="form-group">
+                                <label for="doc1">📄 Beleidsdocument</label>
+                                <input type="file" class="form-control-file" id="doc1" name="doc1" accept=".docx">
+                                <small class="form-text text-muted">Word document (.docx)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="doc2">📢 Communicatieplan</label>
+                                <input type="file" class="form-control-file" id="doc2" name="doc2" accept=".docx">
+                                <small class="form-text text-muted">Word document (.docx)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="doc3">📊 Stakeholder doc</label>
+                                <input type="file" class="form-control-file" id="doc3" name="doc3" accept=".docx">
+                                <small class="form-text text-muted">Word document (.docx)</small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">🚀 Start Strategische Analyse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card my-4">
+        <div class="card-body">
+            <h5>💡 Tips voor beste resultaten</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Upload alleen Word documenten (.docx formaat)</li>
+                <li class="list-group-item">Zorg dat documenten duidelijk gestructureerd zijn met koppen en paragrafen</li>
+                <li class="list-group-item">Maximale bestandsgrootte is 50MB per document</li>
+                <li class="list-group-item">De AI analyse duurt meestal 10-30 seconden afhankelijk van documentgrootte</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="text-center my-4">
+        ActiZ Document Analyse Tool • <a href="/docs">Documentatie</a> • Versie 2.0
+    </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

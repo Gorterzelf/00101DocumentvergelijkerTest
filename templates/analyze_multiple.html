@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ Document Analyse Tool</title>
+    <style>
+        body {
+            font-family: Times New Roman, serif;
+            margin: 20px;
+            color: #000;
+            background-color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 24px;
+            margin: 20px 0 10px;
+        }
+        p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .emoji {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        form {
+            margin-top: 10px;
+        }
+        input[type="file"] {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        button {
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .helper-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 2px;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .alert .close {
+            cursor: pointer;
+            font-size: 18px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        footer a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        /* Accordion styles (optional, can be removed if not needed) */
+        .accordion-header {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .accordion-content {
+            display: none;
+        }
+        .accordion-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ActiZ Document Analyse Tool</h1>
+        <br>
+        <p>Geavanceerde Document Analyse</p>
+        <br>
+        <p>Analyseer beleidsdocumenten met AI-gestuurde inzichten. Kies een analyse type en upload uw documenten.</p>
+        <br>
+
+        <!-- Flashed Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                        <span class="close">×</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Version Comparison -->
+        <div class="section">
+            <h2 class="accordion-header"><span class="emoji">📄</span>Versie Vergelijking</h2>
+            <div class="accordion-content">
+                <br>
+                <h2>Versie Vergelijking</h2>
+                <br>
+                <p>Vergelijk twee versies van hetzelfde document om wijzigingen te identificeren en de impact te analyseren.</p>
+                <br>
+                <p>Upload documenten voor vergelijking</p>
+                <br>
+                <form action="/analyze" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="mode" value="version_comparison">
+                    <p><span class="emoji">📎</span>Oorspronkelijk document (versie 1)</p>
+                    <input type="file" name="doc1" accept=".docx,.pdf,.txt" required>
+                    <p class="helper-text">Word, PDF of tekst bestand</p>
+                    <br>
+                    <p><span class="emoji">📎</span>Gewijzigd document (versie 2)</p>
+                    <input type="file" name="doc2" accept=".docx,.pdf,.txt" required>
+                    <p class="helper-text">Word, PDF of tekst bestand</p>
+                    <br>
+                    <button type="submit">Start Versie Vergelijking</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <!-- ActiZ Position Analysis -->
+        <div class="section">
+            <h2 class="accordion-header"><span class="emoji">🎯</span>ActiZ Positie Analyse</h2>
+            <div class="accordion-content">
+                <br>
+                <h2>ActiZ Positie Analyse</h2>
+                <br>
+                <p>Analyseer hoe ActiZ standpunten zich verhouden tot voorgesteld beleid en identificeer kansen en uitdagingen.</p>
+                <br>
+                <p>Upload documenten voor positie analyse</p>
+                <br>
+                <form action="/analyze" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="mode" value="actiz_position">
+                    <p><span class="emoji">📎</span>Beleidsdocument</p>
+                    <input type="file" name="policy_doc" accept=".docx,.pdf,.txt" required>
+                    <p class="helper-text">Word, PDF of tekst bestand</p>
+                    <br>
+                    <p><span class="emoji">📎</span>ActiZ standpunt</p>
+                    <input type="file" name="actiz_doc" accept=".docx,.pdf,.txt" required>
+                    <p class="helper-text">Word, PDF of tekst bestand</p>
+                    <br>
+                    <button type="submit">Start Positie Analyse</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <!-- External Reaction Analysis -->
+        <div class="section">
+            <h2 class="accordion-header"><span class="emoji">💬</span>Externe Reactie Analyse</h2>
+            <div class="accordion-content">
+                <br>
+                <h2>Externe Reactie Analyse</h2>
+                <br>
+                <p>Analyseer externe reacties op beleid om sentiment, zorgen en kansen te identificeren.</p>
+                <br>
+                <p>Upload documenten voor reactie analyse</p>
+                <br>
+                <form action="/analyze" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="mode" value="external_reaction">
+                    <p><span class="emoji">📎</span>Beleidsdocument</p>
+                    <input type="file" name="policy_doc" accept=".docx" required>
+                    <p class="helper-text">Word document (.docx)</p>
+                    <br>
+                    <p><span class="emoji">📎</span>Externe reactie</p>
+                    <input type="file" name="reaction_doc" accept=".docx" required>
+                    <p class="helper-text">Word document (.docx)</p>
+                    <br>
+                    <button type="submit">Start Reactie Analyse</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <!-- Strategic Communication -->
+        <div class="section">
+            <h2 class="accordion-header"><span class="emoji">🚀</span>Strategische Communicatie</h2>
+            <div class="accordion-content">
+                <br>
+                <h2>Strategische Communicatie</h2>
+                <br>
+                <p>Analyseer meerdere documenten voor coherente communicatiestrategie en messaging alignment.</p>
+                <br>
+                <p>Upload documenten voor strategische analyse</p>
+                <br>
+                <form action="/analyze" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="mode" value="strategic_communication">
+                    <p><span class="emoji">📎</span>Beleidsdocument</p>
+                    <input type="file" name="policy_doc" accept=".docx" required>
+                    <p class="helper-text">Word document (.docx)</p>
+                    <br>
+                    <p><span class="emoji">📎</span>Communicatieplan</p>
+                    <input type="file" name="comm_plan" accept=".docx" required>
+                    <p class="helper-text">Word document (.docx)</p>
+                    <br>
+                    <p><span class="emoji">📎</span>Stakeholder doc</p>
+                    <input type="file" name="stakeholder_doc" accept=".docx" required>
+                    <p class="helper-text">Word document (.docx)</p>
+                    <br>
+                    <button type="submit">Start Strategische Analyse</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <!-- Tips Section -->
+        <div class="section">
+            <h2><span class="emoji">💡</span>Tips voor beste resultaten</h2>
+            <br>
+            <ul>
+                <li>Upload alleen Word documenten (.docx formaat)</li>
+                <br>
+                <li>Zorg dat documenten duidelijk gestructureerd zijn met koppen en paragrafen</li>
+                <br>
+                <li>Maximale bestandsgrootte is 50MB per document</li>
+                <br>
+                <li>De AI analyse duurt meestal 10–30 seconden afhankelijk van documentgrootte</li>
+            </ul>
+        </div>
+        <br>
+
+        <!-- Footer -->
+        <footer>
+            ActiZ Document Analyse Tool • <a href="/docs">Documentatie</a> • Versie 2.0
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript for closing flashed messages
+        document.querySelectorAll('.alert .close').forEach(button => {
+            button.addEventListener('click', () => {
+                button.parentElement.remove();
+            });
+        });
+
+        // JavaScript for accordion (optional, remove if not needed)
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

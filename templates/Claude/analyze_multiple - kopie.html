@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ - Document Analyse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --actiz-yellow: #F9b000;
+            --actiz-yellow-light: #Fed992;
+            --actiz-purple: #3d0a85;
+            --actiz-purple-light: #9886b8;
+            --actiz-blue: #00a1b4;
+            --actiz-blue-light: #9ed0da;
+            --actiz-green: #14ab78;
+            --actiz-red: #a91352;
+            --actiz-grey: #545352;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: var(--actiz-purple);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--actiz-purple) 0%, var(--actiz-blue) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero-section h1 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .mode-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .mode-card.selected {
+            border-color: var(--actiz-purple);
+            background-color: #f8f9ff;
+        }
+
+        .mode-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .mode-card h3 {
+            color: var(--actiz-purple);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .mode-card p {
+            color: var(--actiz-grey);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .mode-card .requirements {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: var(--actiz-grey);
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+
+        .file-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .file-input-group label {
+            font-weight: 600;
+            color: var(--actiz-purple);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .file-input-group .form-text {
+            color: var(--actiz-grey);
+            font-size: 0.875rem;
+        }
+
+        .btn-actiz {
+            background-color: var(--actiz-purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-actiz:hover {
+            background-color: #2e0866;
+            color: white;
+        }
+
+        .btn-actiz:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .mode-input {
+            display: none;
+        }
+
+        .upload-form {
+            display: none;
+        }
+
+        .upload-form.show {
+            display: block;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--actiz-purple);
+            background-color: #f8f9ff;
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--actiz-purple);
+            background-color: #f8f9ff;
+        }
+
+        .selected-files {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-item .file-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-item .file-icon {
+            margin-right: 0.5rem;
+            color: var(--actiz-blue);
+        }
+
+        .mode-description {
+            background: #e3f2fd;
+            border-left: 4px solid var(--actiz-blue);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .feature-item .icon {
+            font-size: 2.5rem;
+            color: var(--actiz-blue);
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h4 {
+            color: var(--actiz-purple);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-info {
+            background-color: #e3f2fd;
+            border-color: var(--actiz-blue-light);
+            color: var(--actiz-purple);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                ActiZ Document Analyse
+            </span>
+            <span class="text-white-50 small">
+                Geavanceerde Multi-Document Interface
+            </span>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1>Welkom bij ActiZ Document Analyse</h1>
+            <p class="lead">Kies een analyse type en upload uw documenten voor intelligente vergelijking en inzichten</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">Kies uw analyse type</h2>
+                
+                <!-- Mode Selection -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mode-card" data-mode="version_comparison">
+                            <span class="icon">🔄</span>
+                            <h3>Versie Vergelijking</h3>
+                            <p>Vergelijk twee versies van hetzelfde document en identificeer alle wijzigingen met gedetailleerde AI-analyse.</p>
+                            <div class="requirements">
+                                <strong>Vereist:</strong> 2 documenten (origineel + nieuwe versie)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mode-card" data-mode="actiz_position">
+                            <span class="icon">🎯</span>
+                            <h3>ActiZ Positie Analyse</h3>
+                            <p>Analyseer een extern document tegen ActiZ standpunten en identificeer beleidsmatige implicaties.</p>
+                            <div class="requirements">
+                                <strong>Vereist:</strong> 2 documenten (extern document + ActiZ positiedocument)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mode-card" data-mode="external_reaction">
+                            <span class="icon">💬</span>
+                            <h3>Externe Reactie Analyse</h3>
+                            <p>Vergelijk een beleidsdocument met externe reacties en identificeer kritiekpunten en kansen.</p>
+                            <div class="requirements">
+                                <strong>Vereist:</strong> 2 documenten (beleidsdocument + externe reactie)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mode-card" data-mode="strategic_communication">
+                            <span class="icon">📊</span>
+                            <h3>Strategische Communicatie</h3>
+                            <p>Analyseer drie documenten voor strategische communicatie-inzichten en beleidsalignment.</p>
+                            <div class="requirements">
+                                <strong>Vereist:</strong> 3 documenten (beleid + communicatie + context)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Forms for each mode -->
+        <div class="upload-section">
+            <form id="upload-form" action="/upload-multiple" method="post" enctype="multipart/form-data" class="upload-form">
+                <input type="hidden" name="mode" id="selected-mode" value="">
+                
+                <div class="mode-description" id="mode-description" style="display: none;">
+                    <h4 id="mode-title"></h4>
+                    <p id="mode-details"></p>
+                </div>
+
+                <!-- Version Comparison -->
+                <div id="version_comparison-fields" class="mode-fields" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="file-input-group">
+                                <label for="doc1">📄 Origineel Document</label>
+                                <input type="file" class="form-control" name="doc1" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Upload het originele document</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="file-input-group">
+                                <label for="doc2">📄 Nieuwe Versie</label>
+                                <input type="file" class="form-control" name="doc2" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Upload de nieuwe versie</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ActiZ Position Analysis -->
+                <div id="actiz_position-fields" class="mode-fields" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="file-input-group">
+                                <label for="actiz_doc1">📋 Extern Document</label>
+                                <input type="file" class="form-control" name="doc1" id="actiz_doc1" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Upload het externe beleidsdocument</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="file-input-group">
+                                <label for="actiz_doc2">🎯 ActiZ Positiedocument</label>
+                                <input type="file" class="form-control" name="doc2" id="actiz_doc2" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Upload het ActiZ standpuntdocument</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- External Reaction Analysis -->
+                <div id="external_reaction-fields" class="mode-fields" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="file-input-group">
+                                <label for="external_doc1">📜 Beleidsdocument</label>
+                                <input type="file" class="form-control" name="doc1" id="external_doc1" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Upload het beleidsdocument</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="file-input-group">
+                                <label for="external_doc2">💬 Externe Reactie</label>
+                                <input type="file" class="form-control" name="doc2" id="external_doc2" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Upload de externe reactie</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Communication -->
+                <div id="strategic_communication-fields" class="mode-fields" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="file-input-group">
+                                <label for="strategic_doc1">📋 Beleidsdocument</label>
+                                <input type="file" class="form-control" name="doc1" id="strategic_doc1" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Primair beleidsdocument</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="file-input-group">
+                                <label for="strategic_doc2">📢 Communicatiestuk</label>
+                                <input type="file" class="form-control" name="doc2" id="strategic_doc2" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Communicatie materiaal</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="file-input-group">
+                                <label for="strategic_doc3">📊 Context Document</label>
+                                <input type="file" class="form-control" name="doc3" id="strategic_doc3" accept=".pdf,.docx,.txt">
+                                <div class="form-text">Aanvullend context document</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-actiz" id="submit-btn" disabled>
+                        🚀 Start Analyse
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Features Section -->
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="icon">🤖</div>
+                <h4>AI-Gedreven Analyse</h4>
+                <p>Geavanceerde kunstmatige intelligentie voor diepgaande documentinzichten</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">📊</div>
+                <h4>Beleidsmatige Impact</h4>
+                <p>Specifieke analyse van beleidsimplicaties voor de zorgverlening</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">⚡</div>
+                <h4>Snelle Resultaten</h4>
+                <p>Efficiënte verwerking voor tijdige besluitvorming</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">🔐</div>
+                <h4>Veilig & Privé</h4>
+                <p>Uw documenten worden veilig verwerkt en automatisch opgeruimd</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const modeDescriptions = {
+            'version_comparison': {
+                title: 'Versie Vergelijking',
+                details: 'Deze analyse vergelijkt twee versies van hetzelfde document en identificeert alle wijzigingen. Ideaal voor het volgen van beleidswijzigingen en het begrijpen van evolutie in documenten.'
+            },
+            'actiz_position': {
+                title: 'ActiZ Positie Analyse',
+                details: 'Vergelijkt externe beleidsdocumenten met ActiZ standpunten om alignment en potentiële conflictpunten te identificeren. Essentieel voor strategische positionering.'
+            },
+            'external_reaction': {
+                title: 'Externe Reactie Analyse',
+                details: 'Analyseert externe reacties op beleidsdocumenten om kritiekpunten, steunbetuigingen en kansen voor verbetering te identificeren.'
+            },
+            'strategic_communication': {
+                title: 'Strategische Communicatie',
+                details: 'Uitgebreide analyse van drie documenten voor strategische communicatie-inzichten en beleidsalignment over meerdere bronnen.'
+            }
+        };
+
+        // Mode selection handling
+        document.querySelectorAll('.mode-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const mode = this.dataset.mode;
+                
+                // Update selected state
+                document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // Update hidden input
+                document.getElementById('selected-mode').value = mode;
+                
+                // Show appropriate form fields
+                document.querySelectorAll('.mode-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+                document.getElementById(mode + '-fields').style.display = 'block';
+                
+                // Show description
+                const description = document.getElementById('mode-description');
+                document.getElementById('mode-title').textContent = modeDescriptions[mode].title;
+                document.getElementById('mode-details').textContent = modeDescriptions[mode].details;
+                description.style.display = 'block';
+                
+                // Show upload form
+                document.getElementById('upload-form').classList.add('show');
+                
+                // Update submit button
+                updateSubmitButton();
+            });
+        });
+
+        // File input validation
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', updateSubmitButton);
+        });
+
+        function updateSubmitButton() {
+            const mode = document.getElementById('selected-mode').value;
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (!mode) {
+                submitBtn.disabled = true;
+                return;
+            }
+            
+            const currentFields = document.getElementById(mode + '-fields');
+            const requiredInputs = currentFields.querySelectorAll('input[type="file"]');
+            
+            let allFilled = true;
+            requiredInputs.forEach(input => {
+                if (!input.files || input.files.length === 0) {
+                    allFilled = false;
+                }
+            });
+            
+            submitBtn.disabled = !allFilled;
+        }
+
+        // Drag and drop enhancement
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            const container = input.closest('.file-input-group');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                container.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                container.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                container.addEventListener(eventName, unhighlight, false);
+            });
+            
+            container.addEventListener('drop', handleDrop, false);
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            function highlight() {
+                container.classList.add('dragover');
+            }
+            
+            function unhighlight() {
+                container.classList.remove('dragover');
+            }
+            
+            function handleDrop(e) {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    input.files = files;
+                    updateSubmitButton();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

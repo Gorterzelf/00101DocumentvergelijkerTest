@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ Document Analyse - Resultaten</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          background-color: #f9f9f9;
+          color: #333;
+          padding: 20px;
+        }
+        h1, h2 {
+          color: #006699;
+        }
+        .section {
+          background-color: #ffffff;
+          padding: 15px;
+          margin-bottom: 20px;
+          border-left: 6px solid #006699;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+        }
+        th, td {
+          border: 1px solid #ddd;
+          padding: 10px;
+          vertical-align: top;
+        }
+        th {
+          background-color: #e6f2f8;
+        }
+        .positive { color: green; }
+        .negative { color: darkred; }
+        ins { background: #e6ffe6; color: green; }  /* Added */
+        del { background: #ffe6e6; color: red; }   /* Removed */
+        .diff-container { max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>ActiZ Document Analyse - Resultaten</h1>
+    <p>ID: {{ results.comparison_id[:8] }}...</p>
+
+    
+        
+            <h2>{{ results.mode_display_name }}</h2>
+            <p>{{ results.stats.total_docs }} documenten geanalyseerd</p>
+        
+
+    
+
+
+    
+        
+            <h3>Geüploade Documenten</h3>
+
+            
+
+                {% for key, filename in results.filenames.items() %}
+                    	{{ key.upper() }}: {{ filename }}
+
+
+                {% endfor %}
+            
+        
+
+    
+
+
+    {% if results.mode == 'version_comparison' and results.analysis_result.basic_comparison %}
+        
+            
+                
+                    
+                        {{ results.analysis_result.basic_comparison.total_changes }}
+
+                        Verschillen gevonden
+
+                    
+
+                
+
+                {% set total_chars = results.stats.total_chars_k|replace('k', '')|float %}
+                {% set doc1_chars = total_chars / 2|round(1) %}
+                {% set doc2_chars = total_chars / 2|round(1) %}
+                
+                    
+                        {{ doc1_chars }}k
+
+                        Karakters document 1
+
+                    
+
+                
+
+                
+                    
+                        {{ doc2_chars }}k
+
+                        Karakters document 2
+
+                    
+
+                
+
+                
+                    
+                        {{ 100 - results.analysis_result.basic_comparison.similarity_percentage }}%
+
+                        Wijzigingsintensiteit
+
+                    
+
+                
+
+            
+
+        
+
+    {% endif %}
+
+    {% if results.mode == 'version_comparison' and results.analysis_result.basic_comparison.differences %}
+        
+            
+                	
+                        Inline weergave
+                    
+	
+                        Tabel weergave
+                    
+
+
+            
+
+            
+                <div class="tab-content" id="inline-view">
+                    {% if results.analysis_result.basic_comparison.html_diff %}
+                        <div class="diff-container">
+                            {{ results.analysis_result.basic_comparison.html_diff|safe }}
+                        </div>
+                    {% else %}
+                        Geen inline diff beschikbaar.
+                    {% endif %}
+                </div>
+
+                <div class="tab-content" id="table-view">
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Sectie</th>
+                            <th>Origineel</th>
+                            <th>Gewijzigd</th>
+                        </tr>
+                        {% for diff in results.analysis_result.basic_comparison.differences %}
+                            <tr>
+                                <td>{{ diff.type }}</td>
+                                <td>{{ diff.section_context or 'Begin document' }}</td>
+                                <td>{% if diff.original %}{{ diff.original }}{% else %}—{% endif %}</td>
+                                <td>{% if diff.modified %}{{ diff.modified }}{% else %}—{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                
+
+            
+
+        
+
+    {% endif %}
+
+    {% if results.analysis_result.ai_analysis %}
+        
+            
+                <h3>AI Analyse & Inzichten</h3>
+
+            
+
+            
+                {% set ai_analysis = results.analysis_result.ai_analysis %}
+                
+                {% if ai_analysis.samenvatting %}
+                    <div class="section">
+                        <h4>📋 1. Samenvatting van wijzigingen</h4>
+                        <ul>
+                            {% for item in ai_analysis.samenvatting %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if ai_analysis.toegevoegd %}
+                    <div class="section">
+                        <h4>➕ 2. Toegevoegde onderwerpen</h4>
+                        <ul>
+                            {% for item in ai_analysis.toegevoegd %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if ai_analysis.verwijderd %}
+                    <div class="section">
+                        <h4>➖ 3. Verwijderde of aangepaste onderdelen</h4>
+                        <ul>
+                            {% for item in ai_analysis.verwijderd %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if ai_analysis.semantische_wijzigingen %}
+                    <div class="section">
+                        <h4>🔍 Semantische Wijzigingen</h4>
+                        <table>
+                            <tr>
+                                <th>Origineel</th>
+                                <th>Nieuw</th>
+                                <th>Similarity Score</th>
+                                <th>Uitleg</th>
+                            </tr>
+                            {% for change in ai_analysis.semantische_wijzigingen %}
+                                <tr>
+                                    <td>{{ change.original }}</td>
+                                    <td>{{ change.new }}</td>
+                                    <td>{{ change.score }}/10</td>
+                                    <td>{{ change.explanation }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
+
+                {% if ai_analysis.impact %}
+                    <div class="section">
+                        <h4>⚡ 4. Beleidsmatige Impact</h4>
+                        <ul>
+                            {% for item in ai_analysis.impact %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            
+
+        
+
+    {% endif %}
+
+    {% if results.mode == 'actiz_position' and results.analysis_result.position_analysis %}
+        
+            
+                <h1>ActiZ Positie Analyse</h1>
+
+            
+            {% set position_data = results.analysis_result.position_analysis %}
+
+            {% if position_data.steunpunten %}
+                <div class="section">
+                    <h2>✅ Steunpunten</h2>
+                    <ul>
+                        {% for item in position_data.steunpunten %}
+                            	<li>{{ item|safe }}</li>
+
+
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if position_data.kritiekpunten %}
+                <div class="section">
+                    <h2>⚠ Kritiekpunten</h2>
+                    <ul>
+                        {% for item in position_data.kritiekpunten %}
+                            	<li>{{ item|safe }}</li>
+
+
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if position_data.verbeteringen %}
+                <div class="section">
+                    <h2>💡 Verbeterpunten</h2>
+                    <ul>
+                        {% for item in position_data.verbeteringen %}
+                            	<li>{{ item|safe }}</li>
+
+
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if position_data.thema_vergelijking %}
+                <div class="section">
+                    <h2>📊 Thema Vergelijking</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Thema</th>
+                                <th>ActiZ-visie</th>
+                                <th>Beleid</th>
+                                <th>Analyse</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for thema in position_data.thema_vergelijking %}
+                                <tr>
+                                    <td>{{ thema.thema }}</td>
+                                    <td>{{ thema.actiz_visie }}</td>
+                                    <td>{{ thema.beleid }}</td>
+                                    <td class="{{ thema.class }}">{{ thema.analyse }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+            {% if position_data.impact_zorgsector %}
+                <div class="section">
+                    <h2>🏥 Beleidsimpact en Aanbevolen Acties</h2>
+                    <p>{{ position_data.impact_zorgsector|safe }}</p>
+                </div>
+            {% endif %}
+
+
+        {% if results.analysis_result.policy_summary or results.analysis_result.actiz_summary %}
+            
+                
+                    <h4>Document Samenvattingen</h4>
+
+                
+
+                
+                    {% if results.analysis_result.policy_summary %}
+                        <h5>📋 Beleidsdocument Samenvatting</h5>
+                        <p>{{ results.analysis_result.policy_summary|safe }}</p>
+                    {% endif %}
+
+                    {% if results.analysis_result.actiz_summary %}
+                        <h5>📄 ActiZ Standpunt Samenvatting</h5>
+                        <p>{{ results.analysis_result.actiz_summary|safe }}</p>
+                    {% endif %}
+                
+
+            
+
+        {% endif %}
+    {% endif %}
+
+    {% if results.mode == 'external_reaction' and results.analysis_result.reaction_analysis %}
+        
+            
+                <h3>Externe Reactie Analyse</h3>
+
+            
+
+            
+                {% set reaction_data = results.analysis_result.reaction_analysis %}
+                
+                    <p>{{ reaction_data.toon|title or 'Neutraal' }}</p>
+
+                    <p>Overall Toon</p>
+
+                
+
+
+                {% if reaction_data.hoofdpunten %}
+                    <div class="section">
+                        <h4>📋 Hoofdpunten</h4>
+                        <ul>
+                            {% for item in reaction_data.hoofdpunten %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if reaction_data.zorgen %}
+                    <div class="section">
+                        <h4>⚠️ Zorgen</h4>
+                        <ul>
+                            {% for item in reaction_data.zorgen %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if reaction_data.complimenten %}
+                    <div class="section">
+                        <h4>👍 Complimenten</h4>
+                        <ul>
+                            {% for item in reaction_data.complimenten %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if reaction_data.aanbevelingen %}
+                    <div class="section">
+                        <h4>💡 Aanbevelingen</h4>
+                        <ul>
+                            {% for item in reaction_data.aanbevelingen %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            
+
+        
+
+    {% endif %}
+
+    {% if results.mode == 'strategic_communication' and results.analysis_result.communication_analysis %}
+        
+            
+                <h3>Strategische Communicatie Analyse</h3>
+
+            
+
+            
+                {% set comm_data = results.analysis_result.communication_analysis %}
+
+                {% if comm_data.gemeenschappelijke_themas %}
+                    <div class="section">
+                        <h4>🎯 Gemeenschappelijke Thema's</h4>
+                        <ul>
+                            {% for item in comm_data.gemeenschappelijke_themas %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if comm_data.inconsistenties %}
+                    <div class="section">
+                        <h4>⚠️ Inconsistenties tussen Documenten</h4>
+                        <ul>
+                            {% for item in comm_data.inconsistenties %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if comm_data.hoofdboodschappen %}
+                    <div class="section">
+                        <h4>📢 Belangrijkste Boodschappen</h4>
+                        <ul>
+                            {% for item in comm_data.hoofdboodschappen %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if comm_data.communicatie_gaps %}
+                    <div class="section">
+                        <h4>🔍 Communicatie Leemtes</h4>
+                        <ul>
+                            {% for item in comm_data.communicatie_gaps %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if comm_data.aanbevelingen %}
+                    <div class="section">
+                        <h4>🚀 Strategische Aanbevelingen</h4>
+                        <ul>
+                            {% for item in comm_data.aanbevelingen %}
+                                	<li>{{ item|safe }}</li>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            
+
+        
+
+    {% endif %}
+
+    
+        
+            <h3>Acties</h3>
+
+        
+
+        
+            <a href="{{ url_for('download_report', comparison_id=results.comparison_id) }}">📄 Download PDF Rapport</a>
+            <a href="javascript:window.print()">🖨️ Print Resultaten</a>
+            <a href="{{ url_for('index') }}">🔄 Nieuwe Analyse</a>
+        
+
+    
+
+
+    {% if config.get('DEBUG') %}
+        
+            
+                <h3>Technische Informatie (Debug Mode)</h3>
+
+            
+
+            
+                <p>Comparison ID: {{ results.comparison_id }}</p>
+
+                <p>Mode: {{ results.mode }}</p>
+
+                <p>Uploaded Files:</p>
+                <ul>
+                    {% for key, filename in results.filenames.items() %}
+                        	<li>{{ key }}: {{ filename }}</li>
+
+
+                    {% endfor %}
+                </ul>
+                
+                <p>Analysis Stats:</p>
+                <pre>{{ results.stats|tojson(indent=2) }}</pre>
+
+            
+
+        
+
+    {% endif %}
+
+    
+        <footer>ActiZ Document Analyse Tool • <a href="/docs">Documentatie</a> • Versie 2.0 Unified</footer>
+    
+
+
+
+
+
+
+</body>
+</html>

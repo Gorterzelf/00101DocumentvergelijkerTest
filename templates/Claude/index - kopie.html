@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ Document Vergelijker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --actiz-yellow: #F9b000;
+            --actiz-purple: #3d0a85;
+            --actiz-blue: #00a1b4;
+            --actiz-green: #14ab78;
+            --actiz-red: #a91352;
+            --actiz-grey: #545352;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--actiz-purple);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--actiz-purple) 0%, var(--actiz-blue) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-section p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+        
+        .upload-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 2rem;
+            transition: transform 0.2s;
+        }
+        
+        .upload-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        .btn-actiz {
+            background-color: var(--actiz-purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-actiz:hover {
+            background-color: #2e0866;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(61,10,133,0.3);
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-input-wrapper label {
+            font-weight: 600;
+            color: var(--actiz-grey);
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-info {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--actiz-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0,161,180,0.25);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--actiz-purple), var(--actiz-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+        
+        .alert-danger {
+            background-color: #fee;
+            color: var(--actiz-red);
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <span class="navbar-brand">
+                ActiZ Document Vergelijker
+            </span>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1>Document Vergelijking met AI</h1>
+            <p>Analyseer wijzigingen tussen documenten met geavanceerde AI-ondersteuning</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="upload-card">
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mb-4" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <h2 class="text-center mb-4">Upload Documenten</h2>
+                    
+                    <form action="{{ url_for('upload_files') }}" method="POST" enctype="multipart/form-data">
+                        <div class="file-input-wrapper">
+                            <label for="file1" class="form-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Document 1 (Origineel)
+                            </label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="file1" 
+                                   name="file1" 
+                                   accept=".pdf,.txt,.doc,.docx" 
+                                   required>
+                            <div class="file-info">Ondersteunde formaten: PDF, TXT, Word (DOC/DOCX)</div>
+                        </div>
+                        
+                        <div class="file-input-wrapper">
+                            <label for="file2" class="form-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="12" y1="13" x2="12" y2="17"></line>
+                                    <line x1="12" y1="21" x2="12" y2="17"></line>
+                                    <line x1="9" y1="17" x2="15" y2="17"></line>
+                                </svg>
+                                Document 2 (Nieuwe versie)
+                            </label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="file2" 
+                                   name="file2" 
+                                   accept=".pdf,.txt,.doc,.docx" 
+                                   required>
+                            <div class="file-info">Ondersteunde formaten: PDF, TXT, Word (DOC/DOCX)</div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-actiz btn-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                    <path d="M9 11l3 3L22 4"></path>
+                                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                                </svg>
+                                Start Vergelijking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h5>AI-Analyse</h5>
+                        <p class="text-muted">Geavanceerde AI analyseert de betekenis van wijzigingen</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="m19 9-5 5-4-4-3 3"></path>
+                            </svg>
+                        </div>
+                        <h5>Impact Inzicht</h5>
+                        <p class="text-muted">Begrijp de beleidsmatige impact van wijzigingen</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-11h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <h5>Nauwkeurig</h5>
+                        <p class="text-muted">Detecteert verplaatste, gewijzigde en onveranderde content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActiZ Document Vergelijker - Technische Documentatie</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .code-container {
+            position: relative;
+            background-color: #1f2937;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .code-container pre { color: #f3f4f6; font-size: 0.875rem; }
+        .code-container code {
+            font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", monospace;
+        }
+        
+        /* ActiZ Color Palette */
+        :root {
+            --actiz-yellow: #F9b000;
+            --actiz-yellow-light: #Fed992;
+            --actiz-purple: #3d0a85;
+            --actiz-purple-light: #9886b8;
+            --actiz-blue: #00a1b4;
+            --actiz-blue-light: #9ed0da;
+            --actiz-green: #14ab78;
+            --actiz-red: #a91352;
+            --actiz-grey: #545352;
+        }
+        
+        details > summary { cursor: pointer; list-style-type: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details > summary::before {
+            content: '▶';
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        details[open] > summary::before { transform: rotate(90deg); }
+        
+        .actiz-gradient {
+            background: linear-gradient(135deg, var(--actiz-purple) 0%, var(--actiz-blue) 50%, var(--actiz-yellow) 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+
+            <!-- Header Section -->
+            <header class="mb-10 text-center">
+                <div class="flex justify-center mb-8">
+                    <div class="actiz-gradient p-6 rounded-xl shadow-lg">
+                        <h1 class="text-4xl font-bold text-white">ActiZ</h1>
+                        <p class="text-white/80 text-lg">Document Vergelijker</p>
+                    </div>
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 mb-2">Technische Documentatie</h1>
+                <p class="text-lg text-slate-600">AI-gedreven documentanalyse voor de zorgsector</p>
+                
+                <!-- Status badges -->
+                <div class="flex justify-center gap-4 mt-6">
+                    <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                        ✅ Core Functionaliteit Werkend
+                    </span>
+                    <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                        🚧 In Ontwikkeling
+                    </span>
+                    <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                        📅 Volgende Sessie: ActiZ Visie Integratie
+                    </span>
+                </div>
+            </header>
+            
+            <!-- Quick Stats -->
+            <section class="mb-12 grid md:grid-cols-4 gap-4">
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl">
+                    <div class="text-3xl font-bold">47</div>
+                    <div class="text-purple-100">Pagina's verwerkt</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl">
+                    <div class="text-3xl font-bold">150k+</div>
+                    <div class="text-blue-100">Karakters geanalyseerd</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl">
+                    <div class="text-3xl font-bold">GPT-4</div>
+                    <div class="text-green-100">AI Model gebruikt</div>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl">
+                    <div class="text-3xl font-bold">100%</div>
+                    <div class="text-yellow-100">Werkend prototype</div>
+                </div>
+            </section>
+
+            <!-- Table of Contents -->
+            <section id="inhoudsopgave" class="mb-12 p-6 bg-slate-100 rounded-xl">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3" style="color: var(--actiz-purple)">
+                        <path d="M8 6h10"></path><path d="M6 12h12"></path><path d="M4 18h14"></path>
+                    </svg>
+                    Inhoudsopgave
+                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold text-slate-700 mb-2">📚 Basis Documentatie</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#overzicht" class="text-purple-700 hover:underline">1. Project Overzicht</a></li>
+                            <li><a href="#architectuur" class="text-purple-700 hover:underline">2. Technische Architectuur</a></li>
+                            <li><a href="#installatie" class="text-purple-700 hover:underline">3. Installatie & Setup</a></li>
+                            <li><a href="#gebruik" class="text-purple-700 hover:underline">4. Gebruikershandleiding</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-700 mb-2">🚀 Geavanceerd</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#deployment" class="text-purple-700 hover:underline">5. Azure Deployment</a></li>
+                            <li><a href="#actiz-visie" class="text-purple-700 hover:underline">6. ActiZ Visie Integratie</a></li>
+                            <li><a href="#api" class="text-purple-700 hover:underline">7. API Documentatie</a></li>
+                            <li><a href="#troubleshooting" class="text-purple-700 hover:underline">8. Troubleshooting</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project Overview -->
+            <section id="overzicht" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3" style="color: var(--actiz-blue)">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    </svg>
+                    1. Project Overzicht
+                </h2>
+                
+                <div class="prose max-w-none">
+                    <p class="text-slate-700 text-lg mb-6">
+                        De <strong>ActiZ Document Vergelijker</strong> is een AI-gedreven tool die automatisch verschillen detecteert tussen documentversies en deze analyseert op betekenis en impact. Specifiek ontwikkeld voor de zorgsector om beleidswijzigingen snel en accuraat te kunnen beoordelen.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-l-4" style="border-color: var(--actiz-purple)">
+                        <h3 class="font-bold text-purple-800 mb-2">🎯 Hoofdfunctie</h3>
+                        <p class="text-purple-700">Vergelijkt PDF documenten en genereert AI-analyses van wijzigingen met focus op beleid, financiën en stakeholder impact.</p>
+                    </div>
+                    <div class="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-l-4" style="border-color: var(--actiz-blue)">
+                        <h3 class="font-bold text-blue-800 mb-2">🔧 Technologie</h3>
+                        <p class="text-blue-700">Python + Flask web app met Azure Document Intelligence en Azure OpenAI (GPT-4) voor AI-analyse.</p>
+                    </div>
+                    <div class="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-l-4" style="border-color: var(--actiz-green)">
+                        <h3 class="font-bold text-green-800 mb-2">👥 Doelgroep</h3>
+                        <p class="text-green-700">ActiZ medewerkers die beleidswijzigingen moeten analyseren en adviseren over impact op zorgorganisaties.</p>
+                    </div>
+                </div>
+
+                <!-- Current Status -->
+                <div class="p-6 bg-slate-50 rounded-xl">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">✅ Huidige Status (Werkend)</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-slate-700 mb-2">Core Functionaliteit</h4>
+                            <ul class="text-slate-600 space-y-1">
+                                <li>✅ PDF upload en tekstextractie</li>
+                                <li>✅ Document vergelijking</li>
+                                <li>✅ AI-analyse van verschillen</li>
+                                <li>✅ Web interface met ActiZ styling</li>
+                                <li>✅ Lokaal deployment werkend</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-slate-700 mb-2">Technische Stack</h4>
+                            <ul class="text-slate-600 space-y-1">
+                                <li>✅ Python 3.13 + Virtual Environment</li>
+                                <li>✅ Azure Document Intelligence (Standard S0)</li>
+                                <li>✅ Azure OpenAI (GPT-4)</li>
+                                <li>✅ Flask + Bootstrap + ActiZ kleuren</li>
+                                <li>✅ Error handling en logging</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architectuur" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3" style="color: var(--actiz-yellow)">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" x2="12" y1="22.08" y2="12"></line>
+                    </svg>
+                    2. Technische Architectuur
+                </h2>
+
+                <div class="bg-slate-50 p-6 rounded-xl mb-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">🏗️ Huidige Architectuur</h3>
+                    <div class="code-container">
+                        <pre><code>┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Web Browser   │────│   Flask Web App  │────│  Azure Services │
+│  (ActiZ Style)  │    │   (Python 3.13) │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                │                        │
+                                │                        ├─ Document Intelligence
+                                ▼                        ├─ OpenAI (GPT-4)
+                       ┌──────────────────┐               └─ Blob Storage (future)
+                       │ Document Processor│
+                       │ - PDF extractie   │
+                       │ - Text vergelijking│
+                       │ - AI analyse      │
+                       └──────────────────┘</code></pre>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-4 bg-white rounded-lg border-2" style="border-color: var(--actiz-blue)">
+                        <h4 class="font-bold text-slate-800 mb-2">Frontend</h4>
+                        <ul class="text-slate-600 space-y-1 text-sm">
+                            <li>• HTML5 + Bootstrap 5</li>
+                            <li>• ActiZ kleurenschema</li>
+                            <li>• Responsive design</li>
+                            <li>• File upload interface</li>
+                            <li>• Real-time resultaten</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg border-2" style="border-color: var(--actiz-purple)">
+                        <h4 class="font-bold text-slate-800 mb-2">Backend</h4>
+                        <ul class="text-slate-600 space-y-1 text-sm">
+                            <li>• Flask web framework</li>
+                            <li>• Azure SDK integraties</li>
+                            <li>• Error handling & logging</li>
+                            <li>• File processing pipeline</li>
+                            <li>• AI orchestration</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Next Steps Section -->
+            <section id="actiz-visie" class="mb-12 p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2" style="border-color: var(--actiz-yellow)">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3" style="color: var(--actiz-yellow)">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="m9 11 2 2 4-4"></path>
+                        <path d="M12 2v2"></path><path d="M12 18v2"></path>
+                        <path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path>
+                        <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                        <path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path>
+                    </svg>
+                    6. ActiZ Visie Integratie (Volgende Sessie)
+                </h2>
+
+                <div class="bg-white p-6 rounded-lg mb-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">🎯 Doel: Advies op basis van ActiZ Visie</h3>
+                    <p class="text-slate-700 mb-4">
+                        Uitbreiding waarbij de tool niet alleen verschillen detecteert, maar ook advies geeft op basis van de ActiZ visie en strategie. 
+                        Een derde document (ActiZ Visie) wordt gebruikt als referentiekader.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-4 bg-white rounded-lg">
+                        <h4 class="font-bold text-slate-800 mb-3">📋 Functionaliteit</h4>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                Upload 3 documenten: Original, Nieuwe versie, ActiZ Visie
+                            </li>
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                AI analyseert wijzigingen tegen ActiZ principes
+                            </li>
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                Genereert strategisch advies en aanbevelingen
+                            </li>
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                Identificeert conflicten met ActiZ standpunten
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg">
+                        <h4 class="font-bold text-slate-800 mb-3">🔧 Technische Opties</h4>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <strong>Optie A:</strong> Nieuwe pagina in huidige app
+                            </li>
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <strong>Optie B:</strong> Tab-interface in één app
+                            </li>
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <strong>Optie C:</strong> Separate microservice
+                            </li>
+                            <li class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                Advanced: RAG-implementatie voor ActiZ kennisbank
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-yellow-100 rounded-lg border-l-4" style="border-color: var(--actiz-yellow)">
+                    <h4 class="font-bold text-yellow-800 mb-2">📅 Planning Volgende Sessie</h4>
+                    <ul class="text-yellow-700 space-y-1">
+                        <li>1. ✅ Testen huidige functionaliteit (30 min)</li>
+                        <li>2. 🎯 Architectuur beslissingen voor ActiZ Visie (20 min)</li>
+                        <li>3. 🔨 Implementatie nieuwe features (60 min)</li>
+                        <li>4. 🚀 Testing en validatie (20 min)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Placeholder sections voor volgende keer -->
+            <section id="installatie" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">3. Installatie & Setup</h2>
+                <div class="p-6 bg-slate-100 rounded-xl">
+                    <p class="text-slate-600">📝 <em>Wordt uitgewerkt in volgende sessie...</em></p>
+                </div>
+            </section>
+
+            <section id="gebruik" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">4. Gebruikershandleiding</h2>
+                <div class="p-6 bg-slate-100 rounded-xl">
+                    <p class="text-slate-600">📝 <em>Wordt uitgewerkt in volgende sessie...</em></p>
+                </div>
+            </section>
+
+            <section id="deployment" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">5. Azure Deployment</h2>
+                <div class="p-6 bg-slate-100 rounded-xl">
+                    <p class="text-slate-600">📝 <em>Wordt uitgewerkt in volgende sessie...</em></p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center p-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl shadow-2xl">
+                <h3 class="text-2xl font-bold mb-4">🚀 Status: Ready for Next Phase!</h3>
+                <p class="text-purple-100 mb-6">
+                    Basis documentvergelijker werkend. Volgende stap: ActiZ Visie integratie voor strategisch advies.
+                </p>
+                <div class="text-sm text-purple-200">
+                    <p><strong>Laatst bijgewerkt:</strong> Vandaag | <strong>Volgende sessie:</strong> ActiZ Visie implementatie</p>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        // Copy button functionality (als we code blocks toevoegen)
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('ActiZ Document Vergelijker documentatie geladen');
+        });
+    </script>
+
+</body>
+</html>

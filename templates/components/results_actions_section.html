@@ -1,0 +1,29 @@
+<!-- Actions Section -->
+<div class="analysis-section no-print">
+    <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v6l4-4-4-4z"></path>
+            <path d="M12 8v6l4-4-4-4z"></path>
+            <path d="M12 14v6l4-4-4-4z"></path>
+        </svg>
+        <h3>Acties</h3>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{{ url_for('download_report', comparison_id=results.comparison_id) }}" class="btn btn-actiz w-100 mb-3">
+                📄 Download PDF Rapport
+            </a>
+        </div>
+        <div class="col-md-4">
+            <button onclick="window.print()" class="btn btn-outline-secondary w-100 mb-3">
+                🖨️ Print Resultaten
+            </button>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary w-100 mb-3">
+                🔄 Nieuwe Analyse
+            </a>
+        </div>
+    </div>
+</div>
