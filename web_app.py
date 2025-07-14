@@ -410,4 +410,4 @@ if __name__ == '__main__':
     logger.info("Starting Flask application - UNIFIED VERSION with advanced interface only")
     logger.info("All legacy routes redirect to the new unified interface")
     logger.info("Version comparison is now integrated into the advanced interface")
-    app.run(debug=False, port=5000, host='127.0.0.1')
+    app.run(debug=True, port=5000, host='127.0.0.1')

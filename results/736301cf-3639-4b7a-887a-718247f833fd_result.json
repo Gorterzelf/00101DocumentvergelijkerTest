@@ -1,0 +1,45 @@
+{
+  "mode": "version_comparison",
+  "timestamp": "2025-07-14T11:43:49.456021",
+  "doc1_name": "736301cf-3639-4b7a-887a-718247f833fd_doc1_test_12a.pdf",
+  "doc2_name": "736301cf-3639-4b7a-887a-718247f833fd_doc2_test_12b.pdf",
+  "doc3_name": null,
+  "doc1_length": 173,
+  "doc2_length": 240,
+  "doc3_length": 0,
+  "basic_comparison": {
+    "differences": [
+      {
+        "type": "verwijderd",
+        "original": "3.4. Mantelzorgbeleid als ruggengraat Via cao -afspraken, pensioenverrekening en een \n\"mantelzorgvoucher\" van EUR 750 per jaar stimuleren we  werk-mantelzorg -combinaties.",
+        "modified": "",
+        "section_context": "Paragraaf 1",
+        "inline_diff": "<span class=\"diff-removed\">3.4. Mantelzorgbeleid als ruggengraat Via cao -afspraken, pensioenverrekening en een \n\"mantelzorgvoucher\" van EUR 750 per jaar stimuleren we  werk-mantelzorg -combinaties.</span>"
+      },
+      {
+        "type": "toegevoegd",
+        "original": "",
+        "modified": "3.4. Versterkte inzet op mantelzorg Er wordt een groter beroep gedaan op  de werk -\nmantelzorg -combinaties. Dit wordt ondersteund via cao -afspraken, pensioenverrekening en een \nwettelijk verplichte mantelzorg -vrijstelling  in deeltijd.",
+        "section_context": "Nieuwe paragraaf",
+        "inline_diff": "<span class=\"diff-added\">3.4. Versterkte inzet op mantelzorg Er wordt een groter beroep gedaan op  de werk -\nmantelzorg -combinaties. Dit wordt ondersteund via cao -afspraken, pensioenverrekening en een \nwettelijk verplichte mantelzorg -vrijstelling  in deeltijd.</span>"
+      }
+    ],
+    "similarity_percentage": 28.09,
+    "total_changes": 2,
+    "added_count": 1,
+    "removed_count": 1,
+    "modified_count": 0,
+    "moved_blocks": [],
+    "added_content": [
+      "3.4. Versterkte inzet op mantelzorg Er wordt een groter beroep gedaan op  de werk -\nmantelzorg -combinaties. Dit wordt ondersteund via cao -afspraken, pensioenverrekening en een \nwettelijk verplichte mantelzorg -vrijstelling  in deeltijd."
+    ],
+    "removed_content": [
+      "3.4. Mantelzorgbeleid als ruggengraat Via cao -afspraken, pensioenverrekening en een \n\"mantelzorgvoucher\" van EUR 750 per jaar stimuleren we  werk-mantelzorg -combinaties."
+    ]
+  },
+  "ai_analysis": {
+    "ai_analysis": "### Analyse van de verschillen tussen Versie 1 en Versie 2\n\n#### 1. **Belangrijkste inhoudelijke wijzigingen**\n- **Titelwijziging**: \n  - In Versie 1 wordt de titel \"Mantelzorgbeleid als ruggengraat\" gebruikt, wat de nadruk legt op de centrale rol van mantelzorg in het beleid. \n  - In Versie 2 is de titel veranderd naar \"Versterkte inzet op mantelzorg\", wat een meer actiegerichte en versterkte focus suggereert.\n  \n- **Wijziging in ondersteuning**:\n  - In Versie 1 wordt een \"mantelzorgvoucher\" van EUR 750 per jaar aangeboden als concrete financiële stimulans.\n  - In Versie 2 is deze voucher verdwenen en vervangen door een \"wettelijk verplichte mantelzorg-vrijstelling in deeltijd\". Dit impliceert een verschuiving van een financiële prikkel naar een structurele wettelijke regeling.\n\n- **Formulering van de werk-mantelzorg-combinaties**:\n  - In Versie 1 wordt gesproken over het stimuleren van werk-mantelzorg-combinaties.\n  - In Versie 2 wordt gesteld dat er een \"groter beroep\" wordt gedaan op deze combinaties, wat een meer dwingend karakter suggereert.\n\n#### 2. **Verplaatste tekstblokken**\nEr zijn geen duidelijke verplaatsingen van tekstblokken binnen de sectie. De wijzigingen zijn voornamelijk inhoudelijk en stilistisch, zonder dat de structuur van de tekst significant is veranderd.\n\n#### 3. **Subtiele betekenisverschillen**\n- **Nadruk op verplichting versus stimulans**:\n  - Versie 1 benadrukt het stimuleren van mantelzorg via vrijwillige maatregelen zoals een voucher. Dit geeft een ondersteunend en faciliterend karakter aan het beleid.\n  - Versie 2 introduceert een wettelijke verplichting (mantelzorg-vrijstelling in deeltijd), wat een meer afdwingend en gestructureerd beleid impliceert.\n\n- **Taalgebruik en framing**:\n  - De term \"ruggengraat\" in Versie 1 benadrukt de fundamentele rol van mantelzorg in het beleid.\n  - De term \"versterkte inzet\" in Versie 2 legt meer nadruk op actie en versterking, wat kan wijzen op een urgentere aanpak.\n\n- **Financiële versus structurele ondersteuning**:\n  - De voucher in Versie 1 biedt een directe financiële ondersteuning aan mantelzorgers.\n  - De vrijstelling in Versie 2 biedt tijd en flexibiliteit, maar kan minder direct financieel voordeel opleveren.\n\n#### 4. **Impact van de wijzigingen**\n- **Beleidsrichting**:\n  - De wijzigingen in Versie 2 wijzen op een verschuiving van een vrijwillig, financieel gesteund beleid naar een meer gestructureerd en wettelijk verplicht beleid. Dit kan betekenen dat mantelzorg een hogere prioriteit krijgt binnen de wetgeving.\n\n- **Effect op werknemers**:\n  - De voucher in Versie 1 biedt werknemers een tastbare financiële stimulans, wat aantrekkelijk kan zijn voor mantelzorgers.\n  - De vrijstelling in Versie 2 biedt werknemers meer tijd en flexibiliteit, maar kan voor werkgevers een grotere organisatorische uitdaging vormen.\n\n- **Communicatie en perceptie**:\n  - Versie 1 kan worden gezien als een meer ondersteunend en vriendelijk beleid, gericht op het faciliteren van mantelzorg.\n  - Versie 2 kan worden geïnterpreteerd als een meer verplichtend beleid, wat zowel positief (meer rechten voor mantelzorgers) als negatief (meer druk op werkgevers en werknemers) kan worden ervaren.\n\n### Conclusie\nDe wijzigingen tussen Versie 1 en Versie 2 weerspiegelen een belangrijke beleidsverschuiving: van een vrijwillige en financieel ondersteunde aanpak naar een meer structurele en wettelijk verplichte regeling. Dit heeft implicaties voor zowel de perceptie van het beleid als de praktische uitvoering ervan, met mogelijke voordelen voor mantelzorgers, maar ook uitdagingen voor werkgevers en werknemers."
+  },
+  "doc1_summary": "Het document bespreekt het belang van mantelzorgbeleid en maatregelen om de combinatie van werk en mantelzorg te ondersteunen. Via cao-afspraken, pensioenverrekening en een jaarlijkse \"mantelzorgvoucher\" van €750 worden werknemers gestimuleerd om mantelzorgtaken te combineren met hun werk. Deze aanpak benadrukt de noodzaak van flexibiliteit in werktijden en -locaties, zodat mantelzorgers hun verantwoordelijkheden beter kunnen afstemmen op hun professionele verplichtingen. Verder wordt het belang van bewustwording bij werkgevers en collega’s onderstreept om een mantelzorgvriendelijke werkomgeving te creëren. Het beleid beoogt niet alleen de werkdruk te verlichten, maar ook het welzijn van mantelzorgers te verbeteren en hun langdurige inzetbaarheid op de arbeidsmarkt te waarborgen.",
+  "doc2_summary": "Er wordt een toenemend beroep gedaan op mantelzorgers die werk en zorg combineren. Om deze werk-mantelzorgcombinaties te ondersteunen, zijn er diverse maatregelen ingevoerd. Zo worden cao-afspraken aangepast, wordt pensioenverrekening mogelijk gemaakt en is er een wettelijk verplichte mantelzorgvrijstelling in deeltijd geïntroduceerd. Deze initiatieven zijn bedoeld om mantelzorgers meer flexibiliteit en financiële zekerheid te bieden, zodat zij hun zorgtaken beter kunnen combineren met hun werkverplichtingen."
+}
