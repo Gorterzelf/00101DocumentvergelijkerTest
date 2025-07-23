@@ -1,0 +1,43 @@
+/* ActiZ branding colors en custom styling */
+:root {
+    --actiz-blue: #0066CC;
+    --actiz-light-blue: #E6F2FF;
+    --actiz-dark: #003366;
+    --actiz-success: #28a745;
+    --actiz-warning: #ffc107;
+    --actiz-danger: #dc3545;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: var(--actiz-light-blue);
+    border-bottom: 2px solid var(--actiz-blue);
+}
+
+#uploadForm {
+    transition: opacity 0.3s ease;
+}
+
+#uploadForm.uploading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.analysis-result {
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--actiz-blue);
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.confidence-badge {
+    font-size: 0.8em;
+}

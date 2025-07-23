@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h1 class="text-center mb-4">📊 Versie Vergelijking Tool</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>🔍 Vergelijk Twee Documentversies</h5>
+                <small class="text-muted">Upload beide versies om de verschillen te analyseren</small>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="row">
+                        <!-- Document 1 (Oude Versie) -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="fileInput1" class="form-label">
+                                    <span class="badge bg-secondary me-2">1</span>
+                                    📄 Originele Versie
+                                </label>
+                                <input type="file" class="form-control" id="fileInput1" name="file1" 
+                                       accept=".pdf,.docx,.txt" required>
+                                <div class="form-text">
+                                    <small>Oude/originele versie van het document</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Document 2 (Nieuwe Versie) -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="fileInput2" class="form-label">
+                                    <span class="badge bg-primary me-2">2</span>
+                                    📄 Bijgewerkte Versie
+                                </label>
+                                <input type="file" class="form-control" id="fileInput2" name="file2" 
+                                       accept=".pdf,.docx,.txt" required>
+                                <div class="form-text">
+                                    <small>Nieuwe/bijgewerkte versie van het document</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="alert alert-info py-2">
+                            <small>
+                                📋 <strong>Toegestane formaten:</strong> PDF, Word (.docx), Tekst (.txt) - Max 16MB per bestand<br>
+                                🤖 <strong>AI Analyse:</strong> Identificeert wijzigingen, toevoegingen en verwijderingen tussen versies
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2 justify-content-between">
+                        <button type="submit" class="btn btn-primary">
+                            <span id="uploadText">🔍 Versies Vergelijken</span>
+                            <span id="uploadSpinner" class="spinner-border spinner-border-sm d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary" id="resetBtn">
+                            🔄 Nieuwe Analyse
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Results section (hidden by default) -->
+        <div id="resultsSection" class="card mt-4 d-none">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>📊 Vergelijkingsresultaat</h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-outline-primary" id="exportBtn">
+                        💾 Exporteren
+                    </button>
+                    <button type="button" class="btn btn-outline-success" id="saveBtn">
+                        💾 Opslaan
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="resultsContent">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Help Section -->
+        <div class="card mt-3 border-0">
+            <div class="card-body py-2">
+                <details>
+                    <summary class="text-muted small">💡 Hoe werkt versie vergelijking?</summary>
+                    <div class="mt-2 small text-muted">
+                        <ul class="mb-0">
+                            <li><strong>Document 1:</strong> Upload de originele/oude versie</li>
+                            <li><strong>Document 2:</strong> Upload de nieuwe/bijgewerkte versie</li>
+                            <li><strong>AI Analyse:</strong> Krijg een gedetailleerde vergelijking met wijzigingen gemarkeerd</li>
+                            <li><strong>Resultaat:</strong> Zie toegevoegde, gewijzigde en verwijderde content</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
