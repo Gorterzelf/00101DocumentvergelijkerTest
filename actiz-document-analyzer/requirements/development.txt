@@ -1,7 +1,24 @@
+# ActiZ Document Analyzer - Development Dependencies
+# Inherit base requirements
 -r base.txt
 
 # Development Tools
 pytest==7.4.3
 pytest-cov==4.1.0
+pytest-flask==1.3.0
+
+# Code Quality
 black==23.11.0
 flake8==6.1.0
+isort==5.12.0
+
+# Documentation
+sphinx==7.2.6
+sphinx-rtd-theme==1.3.0
+
+# Development Server
+flask-debugtoolbar==0.13.1
+
+# Testing Utilities
+factory-boy==3.3.0
+faker==20.1.0
