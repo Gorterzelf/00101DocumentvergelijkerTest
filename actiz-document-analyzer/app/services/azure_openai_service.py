@@ -22,18 +22,37 @@ class AzureOpenAIService:
     Met volledige structurele analyse en numerieke detectie
     """
 
-    def __init__(self):
-        """Initialize Azure OpenAI client with environment variables"""
-        self.endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        self.api_key = os.getenv("AZURE_OPENAI_KEY")
-        self.api_version = os.getenv("AZURE_OPENAI_VERSION", "2024-02-15-preview")
-        self.deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4")
+    def __init__(self, config=None):
+        """Initialize Azure OpenAI client with configuration object"""
+        # Get configuration
+        if config is None:
+            try:
+                from flask import current_app
+
+                config = current_app.config.get("APP_CONFIG")
+            except RuntimeError:
+                # If no app context, fall back to environment variables
+                import os
+
+                from app.config import get_config
+
+                config = get_config()
+
+        # Set configuration values
+        self.endpoint = config.AZURE_OPENAI_ENDPOINT
+        self.api_key = config.AZURE_OPENAI_KEY
+        self.api_version = config.AZURE_OPENAI_VERSION
+        self.deployment = config.AZURE_OPENAI_DEPLOYMENT
+        self.request_timeout = getattr(config, "REQUEST_TIMEOUT", 120)
+        self.max_retries = getattr(config, "MAX_RETRIES", 3)
 
         # Debug: Log configuration (without showing actual keys)
         logger.info(f"Azure config - Endpoint: {self.endpoint}")
         logger.info(f"Azure config - API Key: {'***' if self.api_key else 'None'}")
         logger.info(f"Azure config - Version: {self.api_version}")
         logger.info(f"Azure config - Deployment: {self.deployment}")
+        logger.info(f"Azure config - Timeout: {self.request_timeout}s")
+        logger.info(f"Azure config - Max Retries: {self.max_retries}")
 
         # Validate configuration
         if not self.endpoint or not self.api_key:
@@ -43,17 +62,16 @@ class AzureOpenAIService:
             try:
                 from openai import AzureOpenAI
 
-                logger.info(f"OpenAI version: 1.3.0")
-
+                logger.info("OpenAI version: 1.3.0")
                 self.client = AzureOpenAI(
                     api_key=self.api_key,
                     api_version=self.api_version,
                     azure_endpoint=self.endpoint,
+                    timeout=self.request_timeout,
+                    max_retries=self.max_retries,
                 )
-
                 self.configured = True
                 logger.info("✅ Azure OpenAI Service initialized successfully")
-
             except Exception as e:
                 logger.error(f"❌ Azure OpenAI initialization failed: {e}")
                 logger.error(f"Exception type: {type(e).__name__}")
